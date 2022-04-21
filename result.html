@@ -1,0 +1,103 @@
+ <!DOCTYPE html>
+<html>
+<style>
+    .error {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: red;
+    }
+    
+    .code {
+        position: relative;
+       
+    }
+    
+    .error .errortext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -40px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .error .errortext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 20%;
+        margin-left: -5px;
+        border-width: 5px;
+        1 border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+    
+    .error:hover .errortext {
+        visibility: visible;
+        opacity: 1;
+    }
+</style>
+
+<body>
+  <p class='code'>
+int x = 4 * 4 - 3 ; 
+</p>
+<p class='code'>
+int h ; 
+</p>
+<p class='code'>
+string l ; 
+</p>
+<p class='code'>
+string m = "algo" ; 
+</p>
+<p class='code'>
+int list [ ] = { } ; 
+</p>
+<p class='code'>
+int lista [ ] = { 12 , 12 } ; 
+</p>
+<p class='code'>
+dict d ; 
+</p>
+<p class='code'>
+dict d = dict ( ) ; 
+</p>
+<p class='code'>
+conj c ; 
+</p>
+<p class='code'>
+conj c1 = { "algo" , "mais algo" } ; 
+</p>
+<p class='code'>
+tuple t ; 
+</p>
+<p class='code'>
+tuple t1 = ( 1 , "cenas" ) ; 
+</p>
+<p class='code'>
+tuple t2 = ( 1 , "cenas" , 2 ) ; 
+</p>
+<p class='code'>
+float f ; 
+</p>
+<p class='code'>
+float f1 = 3.3 ; 
+</p>
+<p class='code'><div class='error'>x1<span class='errortext'>Variável não declarada</span></div></p>
+<p class='code'>
+string x1 = "w" ; 
+</p>
+<p class='code'>
+int i = 0 ; 
+</p>
+</body></html>
