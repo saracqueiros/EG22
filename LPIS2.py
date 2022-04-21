@@ -74,7 +74,7 @@ class MyInterpreter (Interpreter):
       self.varsDecl[var[1]] = {"tipo" : var[0], "inic" : 0}
     self.html = self.html + "<p class='code'>\n" 
     for elem in var:
-      #decl tuples e ints
+      #decl tuples e ints com operacoes
       if isinstance(elem, Token):
         self.html = self.html + elem + " "
       else:
@@ -87,7 +87,15 @@ class MyInterpreter (Interpreter):
   def atribuicoes(self, tree):
     var = self.visit_children(tree)
     if (var[0] not in self.varsDecl):
-      self.html = self.html + "<p class='code'><div class='error'>" + var[0] + "<span class='errortext'>Variável não declarada</span></div></p>\n"
+      self.html = self.html + "<p class='code'><div class='error'>"+ var[0]+ "<span class='errortext'>Variável não declarada</span></div>"
+      for elem in var[1:]:
+        if isinstance(elem, Token):
+          self.html = self.html + elem + " "
+        else:
+          for i in elem:
+            self.html = self.html + i + " "
+      
+      self.html = self.html +  "</p>\n"
 
 
 
@@ -97,7 +105,7 @@ start: code
 code: (variaveis | cond | input | output | ciclos)+
 
 variaveis: declaracoes | atribuicoes 
-atribuicoes: WORD IGUAL tipo PV
+atribuicoes: WORD IGUAL var operacao? PV
 declaracoes: decint | decstring | declista | decdict | decconj | dectuplos | decfloat
 decint : INTW WORD (IGUAL INT (operacao)?)? PV
 declista : INTW WORD PRE PRD IGUAL CE (INT ( VIR INT)*)? CD PV
