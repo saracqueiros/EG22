@@ -1,15 +1,35 @@
  <!DOCTYPE html>
 <html>
 <style>
+    p {
+      line-height: 2 ;
+      margin-top: 0 ;
+      margin-bottom: 0 ;
+      
+    }
     .error {
         position: relative;
         display: inline-block;
         border-bottom: 1px dotted black;
         color: red;
     }
+    .redeclared {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: blue;
+    }
+    .notinic {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: grey;
+    }
     
     .code {
         position: relative;
+        display: inline-block;
+
        
     }
     
@@ -45,59 +65,92 @@
         visibility: visible;
         opacity: 1;
     }
+
+    .redeclared .redeclaredtext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -40px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .redeclared .redeclaredtext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 20%;
+        margin-left: -5px;
+        border-width: 5px;
+        1 border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+    
+    .redeclared:hover .redeclaredtext {
+        visibility: visible;
+        opacity: 1;
+    }
+    .notinic .notinictext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -40px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .notinic .notinictext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 20%;
+        margin-left: -5px;
+        border-width: 5px;
+        1 border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+    
+    .notinic:hover .notinictext {
+        visibility: visible;
+        opacity: 1;
+    }
 </style>
 
 <body>
-  <p class='code'>
-int x = 4 * 4 - 3 ; 
-</p>
-<p class='code'>
-int h ; 
-</p>
-<p class='code'>
-string l ; 
-</p>
-<p class='code'>
-string m = "algo" ; 
-</p>
-<p class='code'>
-int list [ ] = { } ; 
-</p>
-<p class='code'>
-int lista [ ] = { 12 , 12 } ; 
-</p>
-<p class='code'>
-dict d ; 
-</p>
-<p class='code'>
-dict d = dict ( ) ; 
-</p>
-<p class='code'>
-conj c ; 
-</p>
-<p class='code'>
-conj c1 = { "algo" , "mais algo" } ; 
-</p>
-<p class='code'>
-tuple t ; 
-</p>
-<p class='code'>
-tuple t1 = ( 1 , "cenas" ) ; 
-</p>
-<p class='code'>
-tuple t2 = ( 1 , "cenas" , 2 ) ; 
-</p>
-<p class='code'>
-float f ; 
-</p>
-<p class='code'>
-float f1 = 3.3 ; 
-</p>
-<p class='code'><div class='error'>x1<span class='errortext'>Variável não declarada</span></div>= 2 + 4 ; </p>
-<p class='code'>
-string x1 = "w" ; 
-</p>
-<p class='code'>
-int i = 0 ; 
-</p>
-</body></html>
+  <p><p class='code'>
+int x = 4 * 4 - 3 ; </p></p><p><p class='code'>
+int h ; </p></p><p><p class='code'>
+string l ; </p></p><p><p class='code'>
+string m = "algo" ; </p></p><p><p class='code'>
+int list [ ] = { } ; </p></p><p><p class='code'>
+int lista [ ] = { 12 , 12 } ; </p></p><p><p class='code'>
+dict d ; </p></p><p class='code'><div class='redeclared'>dict d<span class='redeclaredtext'>Variável redeclarada</span></div> = dict ( ) ; </p></p><p><p class='code'>
+conj c ; </p></p><p><p class='code'>
+conj c1 = { "algo" , "mais algo" } ; </p></p><p><p class='code'>
+tuple t ; </p></p><p><p class='code'>
+tuple t1 = ( 1 , "cenas" ) ; </p></p><p><p class='code'>
+tuple t2 = ( 1 , "cenas" , 2 ) ; </p></p><p><p class='code'>
+float f ; </p></p><p><p class='code'>
+float f1 = 3.3 ; </p></p><p><p class='code'>x = "coisas" ; </p></p>
+<p><p class='code'><div class='error'> x1<span class='errortext'>Variável não declarada</span></div>= 2 + 4 ; </p></p>
+<p><p class='code'><div class='error'> s<span class='errortext'>Variável não declarada</span></div>= input ( ) ; </p></p>
+<p><p class='code'>print ( "teste" ) ; </p></p>x >  5 "cois" ==  "coisa"<p><p class='code'>print ( "até funciona" ) ; </p></p><p><p class='code'>while ( <div class='notinic'> h<span class='notinictext'>Variável não inicializada</span></div> <  4) { <p><p class='code'>
+string x1 = "w" ; </p></p>} ;</p></p><p><p class='code'>
+int i = 0 ; </p></p>i <  1<p><p class='code'><div class='error'> s<span class='errortext'>Variável não declarada</span></div>= input ( ) ; </p></p>
+ 1 ==  1<p><p class='code'>Variaveis declaradas: x, h, l, m, list, lista, d, c, c1, t, t1, t2, f, f1, x1, i, </p></p><p><p class='code'>Variaveis não declaradas: x1, s, </p></p><p><p class='code'>Variaveis redeclaradas: d, </p></p><p><p class='code'>Total Instruções: 28</p></p><p><p class='code'>Inst por tipo: declaracoes: 17; atribuições: 4; io: 4; ciclos: 3</p></p></body></html>
