@@ -1,4 +1,1 @@
-do{
-    s = input();
-} while( 1 == 1);
-
+string s = l[0];

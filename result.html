@@ -1,39 +1,51 @@
  <!DOCTYPE html>
 <html>
 <style>
-    p {
-      line-height: 2 ;
-      margin-top: 0 ;
-      margin-bottom: 0 ;
-      
+     p {
+        line-height: 2;
+        margin-top: 0;
+        margin-bottom: 0;
     }
+    
+      .customIndent {
+        padding-left: 1em;
+    }
+    
     .error {
         position: relative;
         display: inline-block;
         border-bottom: 1px dotted black;
         color: red;
     }
+    
     .redeclared {
         position: relative;
         display: inline-block;
         border-bottom: 1px dotted black;
         color: blue;
     }
+    
     .notinic {
         position: relative;
         display: inline-block;
         border-bottom: 1px dotted black;
         color: grey;
     }
+    .aninh {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: green;
+    }
     
     .code {
         position: relative;
         display: inline-block;
-
-       
     }
     
-    .error .errortext {
+    .error .errortext,
+    .redeclared .redeclaredtext,
+    .notinic .notinictext, .aninh .aninhtext  {
         visibility: hidden;
         width: 200px;
         background-color: #555;
@@ -50,7 +62,9 @@
         transition: opacity 0.3s;
     }
     
-    .error .errortext::after {
+    .error .errortext::after,
+    .redeclared .redeclaredtext::after,
+    .notinic .notinictext::after, .aninh .aninh::after {
         content: "";
         position: absolute;
         top: 100%;
@@ -61,77 +75,14 @@
         border-color: #555 transparent transparent transparent;
     }
     
-    .error:hover .errortext {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    .redeclared .redeclaredtext {
-        visibility: hidden;
-        width: 200px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 0;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -40px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    
-    .redeclared .redeclaredtext::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 20%;
-        margin-left: -5px;
-        border-width: 5px;
-        1 border-style: solid;
-        border-color: #555 transparent transparent transparent;
-    }
-    
-    .redeclared:hover .redeclaredtext {
-        visibility: visible;
-        opacity: 1;
-    }
-    .notinic .notinictext {
-        visibility: hidden;
-        width: 200px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 0;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -40px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    
-    .notinic .notinictext::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 20%;
-        margin-left: -5px;
-        border-width: 5px;
-        1 border-style: solid;
-        border-color: #555 transparent transparent transparent;
-    }
-    
-    .notinic:hover .notinictext {
+    .error:hover .errortext,
+    .redeclared:hover .redeclaredtext,
+    .notinic:hover .notinictext, .aninh:hover .aninhtext {
         visibility: visible;
         opacity: 1;
     }
 </style>
 
 <body>
-  <p><p class='code'>do { <p><p class='code'><div class='error'> s<span class='errortext'>Variável não declarada</span></div>= input ( ) ; </p>
-</p>} while (  1 ==  1) ; </p><p><p class='code'>Variaveis declaradas: </p></p><p><p class='code'>Variaveis não declaradas: s, </p></p<p><p class='code'>Variaveis redeclaradas: </p></p><p><p class='code'>Total Instruções: 4</p></p><p><p class='code'>Inst por tipo: declaracoes: 0; atribuições: 1; io: 1; ciclos: 1</p></p></body></html>
+  <p><p class='code'>
+string s = l [ 0 ] ; </p></p><p><p class='code'>Variaveis declaradas: s: string , </p></p><p><p class='code'>Variaveis não declaradas: </p></p<p><p class='code'>Variaveis redeclaradas: </p></p><p><p class='code'>Total Instruções: 1</p></p><p><p class='code'>Inst por tipo: declaracoes: 1; atribuições: 0; io: 0; ciclos: 0cond: 0</p></p><p><p class='code'>Inst aninhadas: 0</body></html>
