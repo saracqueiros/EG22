@@ -10,7 +10,7 @@ class MyInterpreter (Interpreter):
       self.varsDecl = dict()
       self.varsNDecl = dict ()
       self.varsRDecl = dict()
-      self.tipoInstrucoes = {'declaracoes': 0, 'atribuicoes': 0, 'io': 0, 'ciclos': 0, 'cond': 0}
+      self.tipoInstrucoes = {'declaracoes': 0, 'atribuicoes': 0, 'io': 0, 'ciclos': 0, 'cond': 0, 'funcoes': 0}
       self.totalInst = 0
       self.forC = 0
       self.inInst = {'atual': 0, 'maior': 0}
@@ -131,21 +131,27 @@ class MyInterpreter (Interpreter):
     var = self.visit(tree.children[0])
     if (self.forC== 0):
       self.html = self.html + '<p>'
-    #VErificar que a var ainda não foi declarada
+    #Verificar que a var ainda não foi declarada
     if var[1] not in self.varsDecl:
       if(var[2] != ";"):
         self.varsDecl[var[1]] = {"tipo" : var[0], "inic" : 1, "utilizada": 0}
       else:
         self.varsDecl[var[1]] = {"tipo" : var[0], "inic" : 0, "utilizada": 0}
       self.html = self.html + "<p class='code'>"+"\n" + var[0] + " " + var[1] + " "
-    #Se foi declarada é anunciada com uma classe própria para tal 
+    #Se já foi declarada é anunciada com uma classe própria para tal 
     else:
       self.varsRDecl[var[1]] = {"tipo" : var[0]}
       self.html = self.html + "<p class='code'><div class='redeclared'>"+  var[0] + " " + var[1]+ "<span class='redeclaredtext'>Variável redeclarada</span></div> "
     for elem in var[2:]:
         #decl tuples e ints com operacoes
         if isinstance(elem, Token):
-          self.html = self.html + elem + " "
+          #Casos como: int x = y + 1
+          if elem.type == 'WORD' and elem not in self.varsDecl:
+            self.html = self.html + "<p class='code'><div class='error'> "+ elem + " <span class='errortext'>Variável não declarada</span></div> "
+          else:
+            if elem.type == 'WORD':
+              self.varsDecl[elem]["utilizada"] += 1
+            self.html = self.html + elem + " "
         else:
           for i in elem:
             self.html = self.html + i + " "
@@ -169,10 +175,20 @@ class MyInterpreter (Interpreter):
       self.html = self.html + "<p class='code'>" + var[0] + " "
     for elem in var[1:]:
         if isinstance(elem, Token):
-          self.html = self.html + elem + " "
+            self.html = self.html + elem + " "
         else:
           for i in elem:
-            self.html = self.html + i + " "
+            #Utilização de variaveis nao declaradas à direita da operação 
+
+            if i.type == 'WORD':
+              if i not in self.varsDecl:
+                self.varsNDecl[i] = {}
+                self.html = self.html + "<p class='code'><div class='error'> "+ i + " <span class='errortext'>Variável não declarada</span></div> "
+              else:
+                self.varsDecl[i]["utilizada"] += 1
+                self.html = self.html + i + " "
+            else:
+              self.html = self.html + i + " "
     self.html = self.html +  "</p>\n"
     if (self.forC == 0):
       self.html = self.html + '</p>'
@@ -314,7 +330,7 @@ class MyInterpreter (Interpreter):
         self.html = self.html + elem + " "
       else:
         self.visit(elem)
-    if len(tree.children) == 8: ##condicções para os ifs aninhados, sinalizar se puder simplificar
+    if len(tree.children) == 8: #condições para os ifs aninhados, sinalizar se puder simplificar
       if tree.children[5].children[0].data == 'cond':
         self.aninhavel = True
       else: 
@@ -326,31 +342,74 @@ class MyInterpreter (Interpreter):
     self.html = self.html + "</p>"
     self.inInst['atual'] -=1
     
+  def funcao(self, tree):
+    self.totalInst += 1
+    self.tipoInstrucoes['funcoes'] += 1
+    self.html = self.html + "<p><p class='code'>" 
+    for elem in tree.children[:6]:
+      if isinstance(elem, Token):
+        self.html = self.html + elem + " "
+      else:
+        self.visit(elem)
+    if not isinstance(tree.children[6], Token):
+      if tree.children[6].data == 'code':
+        self.visit(tree.children[6])
+        if not isinstance(tree.children[7], Token): #SE nao for um token é return
+          self.html = self.html + "<p>"
+          for i in tree.children[7].children:
+            self.html = self.html + i + " "
+          self.html = self.html + "</p>" + tree.children[8] + " "
+        else:
+          self.html = self.html + tree.children[7] + " "
+      elif tree.children[6].data == 'return':
+        self.html = self.html + "<p>"
+        for i in tree.children[6].children:
+            self.html = self.html + i + " "
+        self.html = self.html + "</p>" +tree.children[7] + " "
+    
+  def args(self, tree):
+    for elem in tree.children:
+      if isinstance(elem, Token):
+        self.html = self.html + elem + " "
+      else:
+        self.html = self.html + elem.children[0] + " "
+
+
+  
   def maior(self):
     if self.inInst['atual'] > self.inInst['maior']:
       self.inInst['maior'] = self.inInst['atual']
 ## Primeiro precisamos da GIC
 grammar = '''
 start: code
-code: (variaveis | cond | output | ciclos )+
+code: (variaveis | cond | output | ciclos | funcao)+
 
 variaveis: declaracoes | atribuicoes 
-atribuicoes: WORD IGUAL ((var operacao? PV)|input)
-declaracoes: decint | decstring | declista | decdict | decconj | dectuplos | decfloat | decinput |decvallist
-decvallist: (INTW | STRINGW | FLOAT) WORD IGUAL WORD PRE INT PRD PV
+atribuicoes: WORD IGUAL ((var operacao? PV)| input |lista)
+declaracoes: decint | decstring | declista | decdict | decconj | dectuplos | decfloat | decinput | decvallist
+decvallist: (INTW | STRINGW | FLOATW) WORD IGUAL WORD PRE INT PRD PV
 decint : INTW WORD (IGUAL INT (operacao)?)? PV
 declista : INTW WORD PRE PRD IGUAL CE (INT ( VIR INT)*)? CD PV
 decstring: STRINGW WORD (IGUAL ESCAPED_STRING)? PV
 decdict: DICTW WORD (IGUAL DICTW PE PD )? PV
-decconj: CONJW WORD (IGUAL CE (ESCAPED_STRING (VIR ESCAPED_STRING)*)? CD )* PV
+decconj: STRINGW  WORD (IGUAL CE (ESCAPED_STRING (VIR ESCAPED_STRING)*)? CD )* PV
 dectuplos: TUPLEW WORD (IGUAL PE var (VIR var)+ PD)* PV 
 decfloat: FLOATW WORD (IGUAL FLOAT)* PV
 decinput: STRINGW IGUAL input
 
 operacao: ((SUM|SUB|MUL|DIV|MOD) INT)+
+lista: WORD PRE INT PRD PV
+
+funcao: DEFW WORD PE args PD CE code? return? CD 
+args: (types WORD VIR)* types WORD 
+types: (STRINGW |DICTW |INTW | TUPLEW| FLOATW)
+return: RETURNW (WORD VIR)* WORD
+DEFW: "def"
+RETURNW: "return"
 
 condicao: var ((II|MAIOR|MENOR|DIF|E|OU) var)?
-cond: IFW PE condicao PD CE code? CD PV
+cond: IFW PE condicao PD CE code? CD else? PV
+else: ELSEW CE code CD
 
 input: INPUTW PE PD PV
 output: OUTPUTW PE ESCAPED_STRING PD PV
@@ -360,7 +419,7 @@ whilee: WHILEW PE condicao PD CE code? CD PV
 forr: FORW PE variaveis condicao PV WORD IGUAL tipo PD CE code? CD PV 
 dowhile: DOW CE code? CD WHILEW PE condicao PD PV
 
-var: INT | WORD | ESCAPED_STRING | WORD 
+var: INT | WORD | ESCAPED_STRING | FLOAT 
 tipo: var operacao?
 
 

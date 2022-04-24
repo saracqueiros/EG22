@@ -1,1 +1,3 @@
-string s = l[0];
+def func(string s, int x){
+    return x, y
+}
