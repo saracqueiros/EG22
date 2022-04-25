@@ -1,7 +1,4 @@
-def func(string s, int x){
-    return x, y
-}
-int x = 4 * 4 - 3;
+int x = 4;
 int h;
 string l;
 string m = "algo";
@@ -41,11 +38,12 @@ if( x > 5){
 if(x > 5 ){
     print("até funciona"); 
     if(x == 25 ){
-    if(s ){
-} else {
-    print("fixe"); };
-};
-};
+        if(s ){
+                } 
+        else {
+            print("fixe"); };
+        };
+    };
 };
 d = {"algo":1};
 

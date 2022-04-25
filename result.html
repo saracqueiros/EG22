@@ -100,18 +100,39 @@ tr:nth-child(even) {
 </style>
 
 <body> <p><b> Código anotado:</b></p>
-  <p><p class='code'>if ( <div class='error'> x<span class='errortext'>Variável não declarada</span></div> >  2) { } ; </p>
-<p><p class='code'>if ( <div class='error'> x<span class='errortext'>Variável não declarada</span></div> >  2) { } ; </p>
-<p><p class='code'>if ( <div class='error'> x<span class='errortext'>Variável não declarada</span></div> >  2) { } ; </p>
+  <p><p class='code'>
+int x = 4 ; </p></p><p><p class='code'>
+int h ; </p></p><p><p class='code'>
+string l ; </p></p><p><p class='code'>
+string m = "algo" ; </p></p><p><p class='code'>
+int list [ ] = { } ; </p></p><p><p class='code'>
+int lista [ ] = { 12 , 12 } ; </p></p><p><p class='code'>
+dict d ; </p></p><p><p class='code'>
+string s = lista [ 0 ] ; </p></p><p><p class='code'>s = s [ 1 ] ; </p>
+</p><p><p class='code'>s = m [ 1 ] ; </p>
+</p><p><p class='code'><div class='redeclared'>dict d<span class='redeclaredtext'>Variável redeclarada</span></div> = dict ( ) ; </p></p><p><p class='code'>
+conj c ; </p></p><p><p class='code'>
+conj c1 = { "algo" , "mais algo" } ; </p></p><p><p class='code'>
+tuple t ; </p></p><p><p class='code'>
+tuple t1 = ( 1 , "cenas" ) ; </p></p><p><p class='code'>
+tuple t2 = ( 1 , "cenas" , 2 ) ; </p></p><p><p class='code'>
+float f ; </p></p><p><p class='code'>
+float f1 = 3.3 ; </p></p><p><p class='code'>x = "coisas" ; </p>
+</p><p><p class='code'><div class='error'> x1<span class='errortext'>Variável não declarada</span></div>= 2 + 4 ; </p>
+</p><p><p class='code'>s = input ( ) ; </p>
+</p><p><p class='code'>print ( "teste" ) ; </p></p><p><p class='code'>if ( x >  5) { } ; </p><p><p class='code'>if (  "cois" ==  "coisa") { <p><p class='code'>print ( "até funciona" ) ; </p></p>} ; </p><p><p class='code'>while ( <div class='notinic'> h<span class='notinictext'>Variável não inicializada</span></div> <  4) { <p><p class='code'>
+string x1 = "w" ; </p></p>} ;</p></p><p><p class='code'>for (<p class='code'>
+int i = 0 ; </p>i <  1;i = i+1) { } ; </p></p><p><p class='code'>do { <p class='code'>s = input ( ) ; </p>
+} while (  1 ==  1) ; </p><p class='code'><div class='redeclared'>string s<span class='redeclaredtext'>Variável redeclarada</span></div> = "string" ; </p><p><p class='code'>if ( x >  5) { <p><p class='code'>if ( <div class='aninh'>x >  5<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>) { <p><p class='code'>print ( "até funciona" ) ; </p></p><p><p class='code'>if ( x ==  25) { <p><p class='code'>if ( <div class='aninh'>s<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>) { } else { <p><p class='code'>print ( "fixe" ) ; </p></p>} ; </p>} ; </p>} ; </p>} ; </p><p class='code'>d = { "algo" : 1 } ; </p>
 <p><p class='code'>-------------------------Análise Geral-------------------------
-<p>Variáveis declaradas: </p><ul></ul></p></p><p><p class='code'>Variáveis não declaradas: <ul><li><b>x</b></li> </ul></p></p><p><p class='code'>Variaveis redeclaradas: <ul></ul></p></p><p><p class='code'>Variaveis declaradas e nunca mencionadas: <ul></ul></p></p>
+<p>Variáveis declaradas: </p><ul><li><b>x</b>: int</li><li><b>h</b>: int</li><li><b>l</b>: string</li><li><b>m</b>: string</li><li><b>list</b>: int[]</li><li><b>lista</b>: int[]</li><li><b>d</b>: dict</li><li><b>s</b>: string</li><li><b>c</b>: conj</li><li><b>c1</b>: conj</li><li><b>t</b>: tuple</li><li><b>t1</b>: tuple</li><li><b>t2</b>: tuple</li><li><b>f</b>: float</li><li><b>f1</b>: float</li><li><b>x1</b>: string</li><li><b>i</b>: int</li></ul></p></p><p><p class='code'>Variáveis não declaradas: <ul><li><b>x1</b></li> </ul></p></p><p><p class='code'>Variaveis redeclaradas: <ul><li><b>d</b></li> <li><b>s</b></li> </ul></p></p><p><p class='code'>Variaveis declaradas e nunca mencionadas: <ul><li><b>l</b> </li><li><b>list</b> </li><li><b>c</b> </li><li><b>c1</b> </li><li><b>t</b> </li><li><b>t1</b> </li><li><b>t2</b> </li><li><b>f</b> </li><li><b>f1</b> </li><li><b>x1</b> </li></ul></p></p>
 <p><p class='code'>-------------------------------Análise Instruções-------------------------------
 <p> <table>
- <tr> <th> Nº Declarações </th><th>0</th></tr> 
- <tr> <th> Nº Atribuições </th><th>0</th></tr> 
- <tr> <th> Nº Input/Output </th><th>0</th></tr> 
- <tr> <th> Nº Ciclos </th><th>0</th></tr> 
- <tr> <th> Nº Inst. Condicionais </th><th>3</th></tr> 
+ <tr> <th> Nº Declarações </th><th>19</th></tr> 
+ <tr> <th> Nº Atribuições </th><th>8</th></tr> 
+ <tr> <th> Nº Input/Output </th><th>6</th></tr> 
+ <tr> <th> Nº Ciclos </th><th>3</th></tr> 
+ <tr> <th> Nº Inst. Condicionais </th><th>6</th></tr> 
  <tr> <th> Nº Funções </th><th>0</th></tr> 
- <tr> <th> Total Instruções </th><th>6</th></tr></table> 
-<p><p class='code'> NOTA: Existem <b>0</b> situações de aninhamento.</body></html>
+ <tr> <th> Total Instruções </th><th>51</th></tr></table> 
+<p><p class='code'> NOTA: Existem <b>1</b> situações de aninhamento e o nível máximo de instruções condicionais aninhadas é <b>4</b>. Sugestões de simplificação são mencionadas no código acima.</p></p> </body></html>
