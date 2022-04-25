@@ -13,7 +13,7 @@ class MyInterpreter (Interpreter):
       self.tipoInstrucoes = {'declaracoes': 0, 'atribuicoes': 0, 'io': 0, 'ciclos': 0, 'cond': 0, 'funcoes': 0}
       self.totalInst = 0
       self.forC = 0
-      self.inInst = {'atual': 0, 'maior': 0}
+      self.inInst = {'atual': 0, 'maior': 0, 'total': 0}
       self.aninhavel  = False 
       self.html = str(''' <!DOCTYPE html>
 <html>
@@ -120,6 +120,7 @@ tr:nth-child(even) {
   ''')
   
   def start(self, tree):
+    #start: code
     self.visit(tree.children[0])
     self.html = self.html + self.dadosfinais() + str('''</body></html>''')
     return self.html
@@ -146,7 +147,10 @@ tr:nth-child(even) {
     r = r + " \n <tr> <th> Nº Inst. Condicionais </th><th>" + str(self.tipoInstrucoes['cond']) + "</th></tr>"
     r = r + " \n <tr> <th> Nº Funções </th><th>" + str(self.tipoInstrucoes['funcoes']) + "</th></tr>"
     r = r + " \n <tr> <th> Total Instruções </th><th>" + str(self.totalInst) + "</th></tr></table>"
-    r = r + " \n<p><p class='code'> NOTA: Existem <b>" + str(self.inInst['maior']) + "</b> instruções condicionais aninhadas. Sugestões de simplificação são mencionadas no código acima.</p></p> "
+    if (self.inInst['total']!=0):
+      r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(self.inInst['total']) + "</b> situações de aninhamento e o nível máximo de instruções condicionais aninhadas é <b>" + str(self.inInst['maior']) + "</b>. Sugestões de simplificação são mencionadas no código acima.</p></p> "
+    else:
+     r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(self.inInst['total']) + "</b> situações de aninhamento."
     return r
 
   
@@ -184,9 +188,10 @@ tr:nth-child(even) {
         else:
           for i in elem:
             self.html = self.html + i + " "
-    self.html = self.html + "</p>"   
     if (self.forC == 0):
       self.html = self.html + '</p>'
+    self.html = self.html + "</p>\n"   
+
 
   def atribuicoes(self, tree):
     self.totalInst += 1
@@ -218,9 +223,9 @@ tr:nth-child(even) {
                 self.html = self.html + i + " "
             else:
               self.html = self.html + i + " "
-    self.html = self.html +  "</p>\n"
     if (self.forC == 0):
       self.html = self.html + '</p>'
+    self.html = self.html +  "</p>\n"
 
   def input(self, tree):
     self.maior()
@@ -236,7 +241,7 @@ tr:nth-child(even) {
     self.html = self.html + "<p><p class='code'>"
     for t in tokens:
       self.html = self.html + t + " "
-    self.html = self.html +  "</p></p>"
+    self.html = self.html +  "</p></p>\n"
     return tree
  
   def ciclos(self, tree):
@@ -261,40 +266,11 @@ tr:nth-child(even) {
     else:
       self.html = self.html + tree.children[5] + " " + tree.children[6]
     self.inInst['atual'] -= 1
-    self.html = self.html + "</p></p>"
+    if self.inInst['atual'] == 1:
+      self.inInst['total'] += 1
+    self.html = self.html + "</p></p>\n"
 
-  def condicao(self, tree):
-    self.maior()
-    self.totalInst += 1
-    child = self.visit_children(tree)
-    flag = True #Para saber se há algum operador a escrever no meio
-    first = child[0][0]
-    if len(child) == 3:
-      l = [first, child[2][0]]
-    else:
-      l = [first]
-      flag = False
-    if self.aninhavel == True: #Se for aninhavel colocamos a verde 
-      self.html = self.html + "<div class='aninh'>"
-    for var in l:
-      if var.type == "WORD": #Se for uma variavel temos de ver se ela é declarada ou assim para anotar o codigo 
-        if var not in self.varsDecl:
-          self.varsNDecl[var] = {}
-          self.html = self.html + "<div class='error'> "+ var + "<span class='errortext'>Variável não declarada</span></div>"
-        else:
-          self.varsDecl[var]["utilizada"] += 1 
-          if self.varsDecl[var]["inic"] == 0:
-            self.html = self.html + "<div class='notinic'> "+ var + "<span class='notinictext'>Variável não inicializada</span></div>"
-          else:
-            self.html = self.html + var 
-      else:
-        self.html = self.html + " " + var 
-      if (flag):
-          self.html = self.html + " " + child[1] + " "
-          flag = False
-    if self.aninhavel == True:
-      self.html = self.html + "<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>"
-        
+  
   def forr(self, tree):
     self.maior()
     #forr: FORW PE variaveis condicao PV WORD IGUAL tipo PD CE code? CD PV 
@@ -323,7 +299,9 @@ tr:nth-child(even) {
       self.visit(tree.children[10])
       self.html = self.html + tree.children[11] + " " + tree.children[12] + " "
     self.inInst['atual'] -= 1
-    self.html = self.html +  "</p></p>"
+    if self.inInst['atual'] == 1:
+      self.inInst['total'] += 1
+    self.html = self.html +  "</p></p>\n"
 
 
   def tipo(self, tree):
@@ -345,7 +323,7 @@ tr:nth-child(even) {
         self.html = self.html + elem + " "
       else:
         self.visit(elem)
-    self.html = self.html + "</p>"
+    self.html = self.html + "</p>\n"
 
 
   def cond(self, tree):
@@ -378,8 +356,10 @@ tr:nth-child(even) {
         self.html = self.html + tree.children[7] + " " 
       else:
         self.html = self.html + tree.children[6] + " " 
-    self.html = self.html + "</p>"
+    self.html = self.html + "</p>\n"
     self.inInst['atual'] -=1
+    if self.inInst['atual'] == 1:
+      self.inInst['total'] += 1
 
 
   def elsee(self,tree):
@@ -435,9 +415,9 @@ start: code
 code: (variaveis | cond | output | ciclos | funcao)+
 
 variaveis: declaracoes | atribuicoes 
-atribuicoes: WORD IGUAL ((var operacao? PV)| input |lista)
+atribuicoes: WORD IGUAL ((var operacao? PV)| input |lista | dicionario)
 declaracoes: decint | decstring | declista | decdict | decconj | dectuplos | decfloat | decinput | decvallist
-decvallist: (INTW | STRINGW | FLOATW) WORD IGUAL WORD PRE INT PRD PV
+decvallist: (INTW | STRINGW | FLOATW) WORD IGUAL WORD (PRE INT PRD)+ PV
 decint : INTW WORD (IGUAL INT (operacao)?)? PV
 declista : INTW WORD PRE PRD IGUAL CE (INT ( VIR INT)*)? CD PV
 decstring: STRINGW WORD (IGUAL ESCAPED_STRING)? PV
@@ -448,19 +428,17 @@ decfloat: FLOATW WORD (IGUAL FLOAT)* PV
 decinput: STRINGW IGUAL input
 
 operacao: ((SUM|SUB|MUL|DIV|MOD) INT)+
-lista: WORD PRE INT PRD PV
+lista: WORD (PRE INT PRD)+ PV
+dicionario: CE ESCAPED_STRING DP (INT | WORD)(VIR ESCAPED_STRING DP (INT | WORD))* CD PV
 
 funcao: DEFW WORD PE args PD CE code? return? CD 
 args: (types WORD VIR)* types WORD 
 types: (STRINGW |DICTW |INTW | TUPLEW| FLOATW| CONJW)
 return: RETURNW (WORD VIR)* WORD
-DEFW: "def"
-RETURNW: "return"
 
 condicao: var ((II|MAIOR|MENOR|DIF|E|OU) var)?
 cond: IFW PE condicao PD CE code? CD elsee? PV
 elsee: ELSEW CE code CD
-ELSEW: "else"
 
 input: INPUTW PE PD PV
 output: OUTPUTW PE ESCAPED_STRING PD PV
@@ -473,7 +451,6 @@ dowhile: DOW CE code? CD WHILEW PE condicao PD PV
 var: INT | WORD | ESCAPED_STRING | FLOAT 
 tipo: var operacao?
 
-
 INT:("0".."9")+
 INTW: "int"
 INPUTW: "input"
@@ -484,6 +461,9 @@ CONJW: "conj"
 TUPLEW: "tuple"
 FLOATW: "float"
 WHILEW: "while"
+ELSEW: "else"
+DEFW: "def"
+RETURNW: "return"
 DOW: "do"
 IFW: "if"
 FORW: "for"
@@ -502,6 +482,7 @@ SUB: "-"
 MUL: "*"
 DIV: "/"
 MOD: "%"
+DP: ":"
 II: "=="
 MAIOR: ">"
 MENOR: "<"
