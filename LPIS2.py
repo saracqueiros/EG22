@@ -46,7 +46,7 @@ class MyInterpreter (Interpreter):
         position: relative;
         display: inline-block;
         border-bottom: 1px dotted black;
-        color: grey;
+        color: orange;
     }
     .aninh {
         position: relative;
@@ -98,9 +98,25 @@ class MyInterpreter (Interpreter):
         visibility: visible;
         opacity: 1;
     }
+
+    table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
 </style>
 
-<body>
+<body> <p><b> Código anotado:</b></p>
   ''')
   
   def start(self, tree):
@@ -109,18 +125,28 @@ class MyInterpreter (Interpreter):
     return self.html
 
   def dadosfinais(self):
-    r = "<p><p class='code'>Variaveis declaradas: "
+    r = "<p><p class='code'>-------------------------Análise Geral-------------------------\n<p>Variáveis declaradas: </p><ul>"
     for e in self.varsDecl:
-      r = r + e + ": " + self.varsDecl[e]['tipo'] + " , "
-    r = r + "</p></p><p><p class='code'>Variaveis não declaradas: "
+      r = r + "<li><b>" + e + "</b>: " + self.varsDecl[e]['tipo'] + "</li>"
+    r = r + "</ul></p></p><p><p class='code'>Variáveis não declaradas: <ul>"
     for e in self.varsNDecl:
-      r = r + e + ", "
-    r = r + "</p></p<p><p class='code'>Variaveis redeclaradas: "
+      r = r + "<li><b>" + e + "</b></li> "
+    r = r + "</ul></p></p><p><p class='code'>Variaveis redeclaradas: <ul>"
     for e in self.varsRDecl:
-      r = r + e + ", "
-    r = r + "</p></p><p><p class='code'>Total Instruções: " + str(self.totalInst) + "</p></p>"
-    r = r + "<p><p class='code'>Inst por tipo: " + "declaracoes: " + str(self.tipoInstrucoes['declaracoes']) + "; atribuições: " + str(self.tipoInstrucoes['atribuicoes']) + "; io: " + str(self.tipoInstrucoes['io'])+ "; ciclos: " + str(self.tipoInstrucoes['ciclos']) + "cond: " + str(self.tipoInstrucoes['cond']) + "</p></p>"
-    r = r + "<p><p class='code'>Inst aninhadas: " + str(self.inInst['maior'])
+      r = r + "<li><b>" + e + "</b></li> "
+    r = r + "</ul></p></p><p><p class='code'>Variaveis declaradas e nunca mencionadas: <ul>"
+    for e in self.varsDecl:
+      if self.varsDecl[e]['utilizada'] == 0:
+        r = r + "<li><b>" + e + "</b> </li>"
+    r = r + "</ul></p></p>\n<p><p class='code'>-------------------------------Análise Instruções-------------------------------\n<p>"
+    r = r + " <table>\n <tr> <th> Nº Declarações </th><th>" + str(self.tipoInstrucoes['declaracoes']) + "</th></tr>"
+    r = r + " \n <tr> <th> Nº Atribuições </th><th>" + str(self.tipoInstrucoes['atribuicoes']) + "</th></tr>"
+    r = r + " \n <tr> <th> Nº Input/Output </th><th>" + str(self.tipoInstrucoes['io']) + "</th></tr>"
+    r = r + " \n <tr> <th> Nº Ciclos </th><th>" + str(self.tipoInstrucoes['ciclos']) + "</th></tr>"
+    r = r + " \n <tr> <th> Nº Inst. Condicionais </th><th>" + str(self.tipoInstrucoes['cond']) + "</th></tr>"
+    r = r + " \n <tr> <th> Nº Funções </th><th>" + str(self.tipoInstrucoes['funcoes']) + "</th></tr>"
+    r = r + " \n <tr> <th> Total Instruções </th><th>" + str(self.totalInst) + "</th></tr></table>"
+    r = r + " \n<p><p class='code'> NOTA: Existem <b>" + str(self.inInst['maior']) + "</b> instruções condicionais aninhadas. Sugestões de simplificação são mencionadas no código acima.</p></p> "
     return r
 
   
@@ -134,7 +160,10 @@ class MyInterpreter (Interpreter):
     #Verificar que a var ainda não foi declarada
     if var[1] not in self.varsDecl:
       if(var[2] != ";"):
-        self.varsDecl[var[1]] = {"tipo" : var[0], "inic" : 1, "utilizada": 0}
+        if(var[2] == "["):
+          self.varsDecl[var[1]] = {"tipo" : var[0] + "[]", "inic" : 1, "utilizada": 0}
+        else:
+          self.varsDecl[var[1]] = {"tipo" : var[0], "inic" : 1, "utilizada": 0}
       else:
         self.varsDecl[var[1]] = {"tipo" : var[0], "inic" : 0, "utilizada": 0}
       self.html = self.html + "<p class='code'>"+"\n" + var[0] + " " + var[1] + " "
@@ -392,7 +421,7 @@ decint : INTW WORD (IGUAL INT (operacao)?)? PV
 declista : INTW WORD PRE PRD IGUAL CE (INT ( VIR INT)*)? CD PV
 decstring: STRINGW WORD (IGUAL ESCAPED_STRING)? PV
 decdict: DICTW WORD (IGUAL DICTW PE PD )? PV
-decconj: STRINGW  WORD (IGUAL CE (ESCAPED_STRING (VIR ESCAPED_STRING)*)? CD )* PV
+decconj: CONJW  WORD (IGUAL CE (ESCAPED_STRING (VIR ESCAPED_STRING)*)? CD )* PV
 dectuplos: TUPLEW WORD (IGUAL PE var (VIR var)+ PD)* PV 
 decfloat: FLOATW WORD (IGUAL FLOAT)* PV
 decinput: STRINGW IGUAL input
@@ -402,14 +431,13 @@ lista: WORD PRE INT PRD PV
 
 funcao: DEFW WORD PE args PD CE code? return? CD 
 args: (types WORD VIR)* types WORD 
-types: (STRINGW |DICTW |INTW | TUPLEW| FLOATW)
+types: (STRINGW |DICTW |INTW | TUPLEW| FLOATW| CONJW)
 return: RETURNW (WORD VIR)* WORD
 DEFW: "def"
 RETURNW: "return"
 
 condicao: var ((II|MAIOR|MENOR|DIF|E|OU) var)?
-cond: IFW PE condicao PD CE code? CD else? PV
-else: ELSEW CE code CD
+cond: IFW PE condicao PD CE code? CD PV
 
 input: INPUTW PE PD PV
 output: OUTPUTW PE ESCAPED_STRING PD PV
