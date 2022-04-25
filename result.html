@@ -120,18 +120,18 @@ float f ; </p></p><p><p class='code'>
 float f1 = 3.3 ; </p></p><p><p class='code'>x = "coisas" ; </p>
 </p><p><p class='code'><div class='error'> x1<span class='errortext'>Variável não declarada</span></div>= 2 + 4 ; </p>
 </p><p><p class='code'>s = input ( ) ; </p>
-</p><p><p class='code'>print ( "teste" ) ; </p></p><p><p class='code'>if ( x >  5) { } ;</p><p><p class='code'>if (  "cois" ==  "coisa") { <p><p class='code'>print ( "até funciona" ) ; </p></p>} ;</p><p><p class='code'>while ( <div class='notinic'> h<span class='notinictext'>Variável não inicializada</span></div> <  4) { <p><p class='code'>
+</p><p><p class='code'>print ( "teste" ) ; </p></p><p><p class='code'>if ( x >  5) { } ; </p><p><p class='code'>if (  "cois" ==  "coisa") { <p><p class='code'>print ( "até funciona" ) ; </p></p>} ; </p><p><p class='code'>while ( <div class='notinic'> h<span class='notinictext'>Variável não inicializada</span></div> <  4) { <p><p class='code'>
 string x1 = "w" ; </p></p>} ;</p></p><p><p class='code'>for (<p class='code'>
 int i = 0 ; </p>i <  1;i = i+1) { } ; </p></p><p><p class='code'>do { <p class='code'>s = input ( ) ; </p>
-} while (  1 ==  1) ; </p><p class='code'><div class='redeclared'>string s<span class='redeclaredtext'>Variável redeclarada</span></div> = "string" ; </p><p><p class='code'>if ( x >  5) { <p><p class='code'>if ( <div class='aninh'>x >  5<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>) { <p><p class='code'>print ( "até funciona" ) ; </p></p><p><p class='code'>if ( x ==  25) { <p><p class='code'>if ( <div class='aninh'>s<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>) { } ;</p>} ;</p>} ;</p>} ;</p><p><p class='code'>-------------------------Análise Geral-------------------------
+} while (  1 ==  1) ; </p><p class='code'><div class='redeclared'>string s<span class='redeclaredtext'>Variável redeclarada</span></div> = "string" ; </p><p><p class='code'>if ( x >  5) { <p><p class='code'>if ( <div class='aninh'>x >  5<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>) { <p><p class='code'>print ( "até funciona" ) ; </p></p><p><p class='code'>if ( x ==  25) { <p><p class='code'>if ( <div class='aninh'>s<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>) { } else { <p><p class='code'>print ( "fixe" ) ; </p></p>} ; </p>} ; </p>} ; </p>} ; </p><p><p class='code'>-------------------------Análise Geral-------------------------
 <p>Variáveis declaradas: </p><ul><li><b>x</b>: int</li><li><b>h</b>: int</li><li><b>l</b>: string</li><li><b>m</b>: string</li><li><b>list</b>: int[]</li><li><b>lista</b>: int[]</li><li><b>d</b>: dict</li><li><b>s</b>: string</li><li><b>c</b>: conj</li><li><b>c1</b>: conj</li><li><b>t</b>: tuple</li><li><b>t1</b>: tuple</li><li><b>t2</b>: tuple</li><li><b>f</b>: float</li><li><b>f1</b>: float</li><li><b>x1</b>: string</li><li><b>i</b>: int</li></ul></p></p><p><p class='code'>Variáveis não declaradas: <ul><li><b>x1</b></li> </ul></p></p><p><p class='code'>Variaveis redeclaradas: <ul><li><b>d</b></li> <li><b>s</b></li> </ul></p></p><p><p class='code'>Variaveis declaradas e nunca mencionadas: <ul><li><b>l</b> </li><li><b>list</b> </li><li><b>d</b> </li><li><b>c</b> </li><li><b>c1</b> </li><li><b>t</b> </li><li><b>t1</b> </li><li><b>t2</b> </li><li><b>f</b> </li><li><b>f1</b> </li><li><b>x1</b> </li></ul></p></p>
 <p><p class='code'>-------------------------------Análise Instruções-------------------------------
 <p> <table>
  <tr> <th> Nº Declarações </th><th>19</th></tr> 
  <tr> <th> Nº Atribuições </th><th>7</th></tr> 
- <tr> <th> Nº Input/Output </th><th>5</th></tr> 
+ <tr> <th> Nº Input/Output </th><th>6</th></tr> 
  <tr> <th> Nº Ciclos </th><th>3</th></tr> 
  <tr> <th> Nº Inst. Condicionais </th><th>6</th></tr> 
  <tr> <th> Nº Funções </th><th>1</th></tr> 
- <tr> <th> Total Instruções </th><th>50</th></tr></table> 
+ <tr> <th> Total Instruções </th><th>51</th></tr></table> 
 <p><p class='code'> NOTA: Existem <b>4</b> instruções condicionais aninhadas. Sugestões de simplificação são mencionadas no código acima.</p></p> </body></html>

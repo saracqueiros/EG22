@@ -349,7 +349,7 @@ tr:nth-child(even) {
 
 
   def cond(self, tree):
-    #cond: IFW PE condicao PD CE code? CD PV
+    #cond: IFW PE condicao PD CE code? CD else? PV
     self.totalInst += 1
     self.inInst['atual'] +=1
     self.tipoInstrucoes['cond'] += 1
@@ -359,17 +359,38 @@ tr:nth-child(even) {
         self.html = self.html + elem + " "
       else:
         self.visit(elem)
-    if len(tree.children) == 8: #condições para os ifs aninhados, sinalizar se puder simplificar
+    if not isinstance(tree.children[5], Token): #condições para os ifs aninhados, sinalizar se puder simplificar
       if tree.children[5].children[0].data == 'cond':
         self.aninhavel = True
       else: 
         self.aninhavel = False
       self.visit(tree.children[5])
-      self.html = self.html + tree.children[6] + " " + tree.children[7]
+      self.html = self.html + tree.children[6] + " " 
+      if not isinstance(tree.children[7], Token): #Se houver um else
+        self.visit(tree.children[7])
+        self.html = self.html + tree.children[8] + " " 
+      else:
+        self.html = self.html + tree.children[7] + " " 
     else:
-      self.html = self.html + tree.children[5] + " " + tree.children[6]
+      self.html = self.html + tree.children[5] + " " 
+      if not isinstance(tree.children[6], Token): #Se houver um else sem codigo no if 
+        self.visit(tree.children[6])
+        self.html = self.html + tree.children[7] + " " 
+      else:
+        self.html = self.html + tree.children[6] + " " 
     self.html = self.html + "</p>"
     self.inInst['atual'] -=1
+
+
+  def elsee(self,tree):
+    #elsee: ELSEW CE code CD
+    for elem in tree.children:
+      if not isinstance(elem, Token):
+        self.visit(elem)
+      else:
+        self.html = self.html + elem + " "
+
+
     
   def funcao(self, tree):
     self.totalInst += 1
@@ -437,7 +458,9 @@ DEFW: "def"
 RETURNW: "return"
 
 condicao: var ((II|MAIOR|MENOR|DIF|E|OU) var)?
-cond: IFW PE condicao PD CE code? CD PV
+cond: IFW PE condicao PD CE code? CD elsee? PV
+elsee: ELSEW CE code CD
+ELSEW: "else"
 
 input: INPUTW PE PD PV
 output: OUTPUTW PE ESCAPED_STRING PD PV

@@ -42,7 +42,9 @@ if(x > 5 ){
     print("até funciona"); 
     if(x == 25 ){
     if(s ){
+} else {
+    print("fixe"); };
 };
 };
 };
-};
+
