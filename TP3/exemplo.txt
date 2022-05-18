@@ -1,49 +1,40 @@
 int x = 4;
 int h;
-string l;
-string m = "algo";
-int list [] = {};
-int lista [] = {12, 12};
-dict d;
-string s = lista[0];
-s = s[1];
-s = m[1];
+int m = 3 + y;
+string s;
+string m = "coisas";
 dict d = dict();
-conj c;
-conj c1 = {"algo", "mais algo"};
-tuple t;
+dict m ;
+int lista [] = {12, 14};
+int lista [][] = {{1},{1}};
 tuple t1 = (1, "cenas");
-tuple t2 = (1, "cenas", 2);
-float f;
-float f1 = 3.3;
-x = "coisas";
-x1 = 2 + 4;
+conj c1 = {"algo", "mais algo"};
+
+num = lista[0];
+d = {"algo":1};   
 s = input();
-print("teste"); 
-if( x > 5){};
-if("cois" == "coisa" ){
-    print("até funciona"); 
-};
-while (h < 4){
-    string x1 = "w" ;
-};
-for ( int i = 0; i < 1 ; i = i + 1) {};
 
-do{
-    s = input(); 
-} while( 1 == 1);
+def exemplo(string s){
+    int x = 4 * 4 - 3;
+    s = "algo";
+}
 
-string s = "string";
-if( x > 5){
-if(x > 5 ){
-    print("até funciona"); 
-    if(x == 25 ){
-        if(s ){
-                } 
-        else {
-            print("fixe"); };
+if(num == x ){
+        print("isto até funciona"); 
+
+    };
+
+
+while (h < "letra"){
+        string x1 = "w" ;
+        if(x == 25 ){
+            if(lista){
+            } else {
+                tuple t1 = (1, "cenas");
+                conj c1 = {"algo", "mais algo"};
+            };
+            for(int x = 0; x < j; x = 1 + x){};
+
         };
     };
-};
-d = {"algo":1};
 

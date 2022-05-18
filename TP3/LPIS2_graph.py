@@ -3,7 +3,11 @@ from lark import Discard
 from lark import Lark,Token
 from lark.tree import pydot__tree_to_png
 from lark.visitors import Interpreter
+from html import beginHtml, finalData
 import copy
+
+#Testar:
+#: > result.html | python LPIS2_graph.py >> result.html 
 
 class MyInterpreter (Interpreter):
 
@@ -16,146 +20,19 @@ class MyInterpreter (Interpreter):
       self.forC = 0
       self.inInst = {'atual': 0, 'maior': 0, 'total': 0}
       self.aninhavel  = False 
-      self.html = str(''' <!DOCTYPE html>
-<html>
-<style>
-     p {
-        line-height: 2;
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-    
-      .customIndent {
-        padding-left: 1em;
-    }
-    
-    .error {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black;
-        color: red;
-    }
-    
-    .redeclared {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black;
-        color: blue;
-    }
-    
-    .notinic {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black;
-        color: orange;
-    }
-    .aninh {
-        position: relative;
-        display: inline-block;
-        border-bottom: 1px dotted black;
-        color: green;
-    }
-    
-    .code {
-        position: relative;
-        display: inline-block;
-    }
-    
-    .error .errortext,
-    .redeclared .redeclaredtext,
-    .notinic .notinictext, .aninh .aninhtext  {
-        visibility: hidden;
-        width: 200px;
-        background-color: #555;
-        color: #fff;
-        text-align: center;
-        border-radius: 6px;
-        padding: 5px 0;
-        position: absolute;
-        z-index: 1;
-        bottom: 125%;
-        left: 50%;
-        margin-left: -40px;
-        opacity: 0;
-        transition: opacity 0.3s;
-    }
-    
-    .error .errortext::after,
-    .redeclared .redeclaredtext::after,
-    .notinic .notinictext::after, .aninh .aninh::after {
-        content: "";
-        position: absolute;
-        top: 100%;
-        left: 20%;
-        margin-left: -5px;
-        border-width: 5px;
-        1 border-style: solid;
-        border-color: #555 transparent transparent transparent;
-    }
-    
-    .error:hover .errortext,
-    .redeclared:hover .redeclaredtext,
-    .notinic:hover .notinictext, .aninh:hover .aninhtext {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
-
-td, th {
-  border: 1px solid #dddddd;
-  text-align: left;
-  padding: 8px;
-}
-
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
-</style>
-
-<body> <p><b> Código anotado:</b></p>
-  ''')
+      self.html = beginHtml()
   
   def start(self, tree):
     self.visit(tree.children[0])
-    self.html = self.html + self.dadosfinais() + str('''</body></html>''')
+    self.html = self.html + self.dadosfinais() 
     return self.html
 
   def dadosfinais(self):
-    r = "<p><p class='code'>-------------------------Análise Geral-------------------------\n<p>Variáveis declaradas: </p><ul>"
-    for e in self.varsDecl:
-      r = r + "<li><b>" + e + "</b>: " + self.varsDecl[e]['tipo'] + "</li>"
-    r = r + "</ul></p></p><p><p class='code'>Variáveis não declaradas: <ul>"
-    for e in self.varsNDecl:
-      r = r + "<li><b>" + e + "</b></li> "
-    r = r + "</ul></p></p><p><p class='code'>Variaveis redeclaradas: <ul>"
-    for e in self.varsRDecl:
-      r = r + "<li><b>" + e + "</b></li> "
-    r = r + "</ul></p></p><p><p class='code'>Variaveis declaradas e nunca mencionadas: <ul>"
-    for e in self.varsDecl:
-      if self.varsDecl[e]['utilizada'] == 0:
-        r = r + "<li><b>" + e + "</b> </li>"
-    r = r + "</ul></p></p>\n<p><p class='code'>-------------------------------Análise Instruções-------------------------------\n<p>"
-    r = r + " <table>\n <tr> <th> Nº Declarações </th><th>" + str(self.tipoInstrucoes['declaracoes']) + "</th></tr>"
-    r = r + " \n <tr> <th> Nº Atribuições </th><th>" + str(self.tipoInstrucoes['atribuicoes']) + "</th></tr>"
-    r = r + " \n <tr> <th> Nº Input/Output </th><th>" + str(self.tipoInstrucoes['io']) + "</th></tr>"
-    r = r + " \n <tr> <th> Nº Ciclos </th><th>" + str(self.tipoInstrucoes['ciclos']) + "</th></tr>"
-    r = r + " \n <tr> <th> Nº Inst. Condicionais </th><th>" + str(self.tipoInstrucoes['cond']) + "</th></tr>"
-    r = r + " \n <tr> <th> Nº Funções </th><th>" + str(self.tipoInstrucoes['funcoes']) + "</th></tr>"
-    r = r + " \n <tr> <th> Total Instruções </th><th>" + str(self.totalInst) + "</th></tr></table>"
-    if (self.inInst['total']!=0):
-      r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(self.inInst['total']) + "</b> situações de aninhamento e o nível máximo de instruções condicionais aninhadas é <b>" + str(self.inInst['maior']) + "</b>. Sugestões de simplificação são mencionadas no código acima.</p></p> "
-    else:
-     r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(self.inInst['total']) + "</b> situações de aninhamento."
-    return r
+    return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst)
 
-  
+  """
   def declaracoes(self, tree):
-    self.maior()
+    #self.maior()
     self.totalInst +=1
     self.tipoInstrucoes['declaracoes'] += 1
     var = self.visit(tree.children[0])
@@ -191,7 +68,7 @@ tr:nth-child(even) {
     self.html = self.html + "</p>"   
     if (self.forC == 0):
       self.html = self.html + '</p>'
-
+""""""
   def atribuicoes(self, tree):
     self.totalInst += 1
     self.maior()
@@ -448,54 +325,55 @@ tr:nth-child(even) {
   def maior(self):
     if self.inInst['atual'] > self.inInst['maior']:
       self.inInst['maior'] = self.inInst['atual']
+"""
+
 ## Primeiro precisamos da GIC
 grammar = '''
 start: code
-code: (variaveis | cond | output | ciclos | funcao)+
+code: (variaveis | funcao | cond | output | ciclos)+
 
-variaveis: declaracoes | atribuicoes 
-atribuicoes: WORD IGUAL ((var operacao? PV)| input |lista | dicionario)
-declaracoes: decint | decstring | declista | decdict | decconj | dectuplos | decfloat | decinput | decvallist
-decvallist: (INTW | STRINGW | FLOATW) WORD IGUAL WORD PRE INT PRD PV
-decint : INTW WORD (IGUAL INT (operacao)?)? PV
-declista : INTW WORD PRE PRD IGUAL CE (INT ( VIR INT)*)? CD PV
-decstring: STRINGW WORD (IGUAL ESCAPED_STRING)? PV
-decdict: DICTW WORD (IGUAL DICTW PE PD )? PV
-decconj: CONJW  WORD (IGUAL CE (ESCAPED_STRING (VIR ESCAPED_STRING)*)? CD )* PV
-dectuplos: TUPLEW WORD (IGUAL PE var (VIR var)+ PD)* PV 
-decfloat: FLOATW WORD (IGUAL FLOAT)* PV
+variaveis: (declaracoes | atribuicoes ) PV
+declaracoes: decint | decstring | decdict | declist | decconj | dectuplos | decfloat | decinput 
+decint : INTW WORD (IGUAL (INT | operacao))? 
+  operacao : (NUMBER|WORD) (opsign (NUMBER|WORD))+
+  opsign : SUM | SUB | MUL | DIV | MOD
+decstring : STRINGW WORD (IGUAL ESCAPED_STRING)?
+decdict : DICTW WORD (IGUAL DICTW PE PD)?
+declist : INTW WORD (PRE NUMBER? PRD)+ (IGUAL (content | ultracontent))?
+  content : CE (val)* CD
+  val : INT (VIR INT)*
+  ultracontent: CE (content (VIR content)*)* CD
+decconj: CONJW  WORD (IGUAL CE (ESCAPED_STRING (VIR ESCAPED_STRING)*)? CD )* 
+dectuplos: TUPLEW WORD (IGUAL PE var (VIR var)+ PD)* 
+  var: INT | WORD | ESCAPED_STRING | FLOAT 
+decfloat: FLOATW WORD (IGUAL FLOAT)* 
 decinput: STRINGW IGUAL input
 
-operacao: ((SUM|SUB|MUL|DIV|MOD) INT)+
-lista: WORD PRE INT PRD PV
-dicionario: CE ESCAPED_STRING DP (INT | WORD)(VIR ESCAPED_STRING DP (INT | WORD))* CD PV
-
+atribuicoes: WORD IGUAL (var | operacao | input |lista | dicionario) 
+  input: INPUTW PE PD 
+  lista: WORD (PRE INT PRD)+
+  dicionario: CE ESCAPED_STRING DP (INT | WORD)(VIR ESCAPED_STRING DP (INT | WORD))* CD 
 
 funcao: DEFW WORD PE args PD CE code? return? CD 
-args: (types WORD VIR)* types WORD 
-types: (STRINGW |DICTW |INTW | TUPLEW| FLOATW| CONJW)
-return: RETURNW (WORD VIR)* WORD
-DEFW: "def"
-RETURNW: "return"
+  args: (types WORD VIR)* types WORD 
+  types: (STRINGW |DICTW |INTW | TUPLEW| FLOATW| CONJW)
+  return: RETURNW (WORD VIR)* WORD
+  DEFW: "def"
+  RETURNW: "return" 
 
-condicao: var ((II|MAIOR|MENOR|DIF|E|OU) var)?
 cond: IFW PE condicao PD CE code? CD elsee? PV
-elsee: ELSEW CE code CD
-ELSEW: "else"
+  condicao: var ((II|MAIOR|MENOR|DIF|E|OU) var)?
+  elsee: ELSEW CE code CD
+  ELSEW: "else"
 
-input: INPUTW PE PD PV
 output: OUTPUTW PE ESCAPED_STRING PD PV
 
-ciclos: whilee | forr | dowhile
-whilee: WHILEW PE condicao PD CE code? CD PV 
-forr: FORW PE variaveis condicao PV WORD IGUAL tipo PD CE code? CD PV 
-dowhile: DOW CE code? CD WHILEW PE condicao PD PV
-
-var: INT | WORD | ESCAPED_STRING | FLOAT 
-tipo: var operacao?
+ciclos: (whilee | forr | dowhile) PV
+whilee: WHILEW PE condicao PD CE code? CD 
+forr: FORW PE variaveis condicao PV atribuicoes PD CE code? CD 
+dowhile: DOW CE code? CD WHILEW PE condicao PD 
 
 DP: ":"
-INT:("0".."9")+
 INTW: "int"
 INPUTW: "input"
 OUTPUTW: "print"
@@ -508,8 +386,6 @@ WHILEW: "while"
 DOW: "do"
 IFW: "if"
 FORW: "for"
-WORD: "a".."z"("a".."z"|"0".."9")*
-FLOAT: "0".."9"+".""0".."9"+
 PE:"("
 PRE:"["
 PRD: "]"
@@ -530,10 +406,15 @@ DIF: "!="
 E: "&&"
 OU: "||"
 IGUAL:"="
+WORD: "a".."z"("a".."z"|"0".."9")*
+
 
 %import common.WS
 %import common.NEWLINE 
+%import common.INT
+%import common.FLOAT
 %import common.ESCAPED_STRING
+%import common.NUMBER
 %ignore NEWLINE
 %ignore WS
 '''
