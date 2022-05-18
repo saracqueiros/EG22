@@ -1,0 +1,126 @@
+ <!DOCTYPE html>
+<html>
+<style>
+     p {
+        line-height: 2;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+      .customIndent {
+        padding-left: 1em;
+    }
+    
+    .error {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: red;
+    }
+    
+    .redeclared {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: blue;
+    }
+    
+    .notinic {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: orange;
+    }
+    .aninh {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: green;
+    }
+    
+    .code {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .error .errortext,
+    .redeclared .redeclaredtext,
+    .notinic .notinictext, .aninh .aninhtext  {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -40px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .error .errortext::after,
+    .redeclared .redeclaredtext::after,
+    .notinic .notinictext::after, .aninh .aninh::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 20%;
+        margin-left: -5px;
+        border-width: 5px;
+        1 border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+    
+    .error:hover .errortext,
+    .redeclared:hover .redeclaredtext,
+    .notinic:hover .notinictext, .aninh:hover .aninhtext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+
+<body> <p><b> Código anotado:</b></p>
+  <p><p class='code'>def exemplo ( string s ) { <p><p class='code'>
+int x = 4 * 4 - 3 ; </p></p><p><p class='code'>s = "algo" ; </p>
+</p><p><p class='code'>
+int lista [ ] = { 12 , 14 } ; </p></p><p><p class='code'>
+dict d = dict ( ) ; </p></p><p><p class='code'><div class='redeclared'>dict d<span class='redeclaredtext'>Variável redeclarada</span></div> ; </p></p><p><p class='code'>
+string h ; </p></p><p><p class='code'><div class='error'> num<span class='errortext'>Variável não declarada</span></div>= lista [ 0 ] ; </p>
+</p><p><p class='code'>if ( <div class='error'> num<span class='errortext'>Variável não declarada</span></div> == x) { <p><p class='code'>print ( "isto até funciona" ) ; </p></p>} ; </p><p><p class='code'>while ( <div class='notinic'> h<span class='notinictext'>Variável não inicializada</span></div> <  "letra") { <p><p class='code'>
+string x1 = "w" ; </p></p><p><p class='code'>if ( x ==  25) { <p><p class='code'>if ( <div class='aninh'>lista<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>) { } else { <p><p class='code'>
+tuple t1 = ( 1 , "cenas" ) ; </p></p><p><p class='code'>
+conj c1 = { "algo" , "mais algo" } ; </p></p>} ; </p>} ; </p>} ;</p></p><p><p class='code'>for (<p class='code'>
+int i = 0 ; </p>i <  1;i = i+1) { } ; </p></p><p><p class='code'>do { <p class='code'>s = input ( ) ; </p>
+} while (  1 ==  1) ; </p><p class='code'>d = { "algo" : 1 } ; </p>
+<p>return x , y </p>} <p><p class='code'>-------------------------Análise Geral-------------------------
+<p>Variáveis declaradas: </p><ul><li><b>x</b>: int</li><li><b>lista</b>: int[]</li><li><b>d</b>: dict</li><li><b>h</b>: string</li><li><b>x1</b>: string</li><li><b>t1</b>: tuple</li><li><b>c1</b>: conj</li><li><b>i</b>: int</li></ul></p></p><p><p class='code'>Variáveis não declaradas: <ul><li><b>num</b></li> </ul></p></p><p><p class='code'>Variaveis redeclaradas: <ul><li><b>d</b></li> </ul></p></p><p><p class='code'>Variaveis declaradas e nunca mencionadas: <ul><li><b>x1</b> </li><li><b>t1</b> </li><li><b>c1</b> </li></ul></p></p>
+<p><p class='code'>-------------------------------Análise Instruções-------------------------------
+<p> <table>
+ <tr> <th> Nº Declarações </th><th>9</th></tr> 
+ <tr> <th> Nº Atribuições </th><th>5</th></tr> 
+ <tr> <th> Nº Input/Output </th><th>2</th></tr> 
+ <tr> <th> Nº Ciclos </th><th>3</th></tr> 
+ <tr> <th> Nº Inst. Condicionais </th><th>3</th></tr> 
+ <tr> <th> Nº Funções </th><th>1</th></tr> 
+ <tr> <th> Total Instruções </th><th>29</th></tr></table> 
+<p><p class='code'> NOTA: Existem <b>1</b> situações de aninhamento e o nível máximo de instruções condicionais aninhadas é <b>3</b>. Sugestões de simplificação são mencionadas no código acima.</p></p> </body></html>
