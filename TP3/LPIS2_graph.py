@@ -30,29 +30,28 @@ class MyInterpreter (Interpreter):
   def dadosfinais(self):
     return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst)
 
-  """
+  
   def declaracoes(self, tree):
+    #declaracoes: decint | decstring | decdict | declist | decconj | dectuplos | decfloat | decinput 
     #self.maior()
     self.totalInst +=1
     self.tipoInstrucoes['declaracoes'] += 1
-    var = self.visit(tree.children[0])
-    if (self.forC== 0):
-      self.html = self.html + '<p>'
+    dec = self.visit(tree.children[0])
     #Verificar que a var ainda não foi declarada
-    if var[1] not in self.varsDecl:
-      if(var[2] != ";"):
-        if(var[2] == "["):
-          self.varsDecl[var[1]] = {"tipo" : var[0] + "[]", "inic" : 1, "utilizada": 0}
+    if (dec[1] not in self.varsDecl or (dec[1] in self.varsDecl and self.varsDecl[dec[1]]['tipo']!= dec[0] )):
+      if(len(dec) > 3):
+        if(dec[2] == "["):
+          self.varsDecl[dec[1]] = {"tipo" : dec[0] + "[]", "inic" : 1, "utilizada": 0}
         else:
-          self.varsDecl[var[1]] = {"tipo" : var[0], "inic" : 1, "utilizada": 0}
+          self.varsDecl[dec[1]] = {"tipo" : dec[0], "inic" : 1, "utilizada": 0}
       else:
-        self.varsDecl[var[1]] = {"tipo" : var[0], "inic" : 0, "utilizada": 0}
-      self.html = self.html + "<p class='code'>"+"\n" + var[0] + " " + var[1] + " "
+        self.varsDecl[dec[1]] = {"tipo" : dec[0], "inic" : 0, "utilizada": 0}
+      self.html = self.html + "<p class='code'>"+"\n" + dec[0] + " " + dec[1] + " "
     #Se já foi declarada é anunciada com uma classe própria para tal 
     else:
-      self.varsRDecl[var[1]] = {"tipo" : var[0]}
-      self.html = self.html + "<p class='code'><div class='redeclared'>"+  var[0] + " " + var[1]+ "<span class='redeclaredtext'>Variável redeclarada</span></div> "
-    for elem in var[2:]:
+      self.varsRDecl[dec[1]] = {"tipo" : dec[0]}
+      self.html = self.html + "<p class='code'><div class='redeclared'>"+  dec[0] + " " + dec[1]+ "<span class='redeclaredtext'>Variável redeclarada</span></div> "
+    for elem in dec[2:]:
         #decl tuples e ints com operacoes
         if isinstance(elem, Token):
           #Casos como: int x = y + 1
@@ -64,11 +63,15 @@ class MyInterpreter (Interpreter):
             self.html = self.html + elem + " "
         else:
           for i in elem:
-            self.html = self.html + i + " "
+            if not isinstance(i, Token):
+              for ii in i:
+                 self.html = self.html + ii 
+            else:
+              self.html = self.html + i 
     self.html = self.html + "</p>"   
     if (self.forC == 0):
       self.html = self.html + '</p>'
-""""""
+"""
   def atribuicoes(self, tree):
     self.totalInst += 1
     self.maior()
@@ -335,13 +338,11 @@ code: (variaveis | funcao | cond | output | ciclos)+
 variaveis: (declaracoes | atribuicoes ) PV
 declaracoes: decint | decstring | decdict | declist | decconj | dectuplos | decfloat | decinput 
 decint : INTW WORD (IGUAL (INT | operacao))? 
-  operacao : (NUMBER|WORD) (opsign (NUMBER|WORD))+
-  opsign : SUM | SUB | MUL | DIV | MOD
+  operacao : (NUMBER|WORD) ((SUM | SUB | MUL | DIV | MOD) (NUMBER|WORD))+
 decstring : STRINGW WORD (IGUAL ESCAPED_STRING)?
 decdict : DICTW WORD (IGUAL DICTW PE PD)?
 declist : INTW WORD (PRE NUMBER? PRD)+ (IGUAL (content | ultracontent))?
-  content : CE (val)* CD
-  val : INT (VIR INT)*
+  content : CE (INT (VIR INT)*)* CD
   ultracontent: CE (content (VIR content)*)* CD
 decconj: CONJW  WORD (IGUAL CE (ESCAPED_STRING (VIR ESCAPED_STRING)*)? CD )* 
 dectuplos: TUPLEW WORD (IGUAL PE var (VIR var)+ PD)* 

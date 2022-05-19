@@ -2,39 +2,9 @@ int x = 4;
 int h;
 int m = 3 + y;
 string s;
-string m = "coisas";
-dict d = dict();
-dict m ;
-int lista [] = {12, 14};
-int lista [][] = {{1},{1}};
+string s = "coisas";
 tuple t1 = (1, "cenas");
 conj c1 = {"algo", "mais algo"};
-
-num = lista[0];
-d = {"algo":1};   
-s = input();
-
-def exemplo(string s){
-    int x = 4 * 4 - 3;
-    s = "algo";
-}
-
-if(num == x ){
-        print("isto até funciona"); 
-
-    };
-
-
-while (h < "letra"){
-        string x1 = "w" ;
-        if(x == 25 ){
-            if(lista){
-            } else {
-                tuple t1 = (1, "cenas");
-                conj c1 = {"algo", "mais algo"};
-            };
-            for(int x = 0; x < j; x = 1 + x){};
-
-        };
-    };
-
+int l [1][2] = {{1}, {2}};
+dict d = dict();
+float f1 = 1.1;
