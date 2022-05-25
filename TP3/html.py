@@ -107,13 +107,16 @@ tr:nth-child(even) {
 
   ''')
 
-def organizar (varsDecl):
+def organizarTipo (varsDecl):
     return {key: value for key, value in sorted(varsDecl.items(), key=lambda item: item[1]['tipo'])}
      
+def organizarLinha (vars):
+    return {key: value for key, value in sorted(vars.items(), key=lambda item: item[1]['pos'][0])}
+   
 
 def varsDecl( varsDecl):
 
-    varsDecl = organizar(varsDecl)
+    varsDecl = organizarTipo(varsDecl)
     tipos = {"conj": 1,"dict": 2, "float":3, "int" : 4,  "list": 5, "string":6, "tuple":7 }
     r = ''' <div class="w3-round w3-teal">
             <div class="w3-container">
@@ -182,9 +185,24 @@ def varsRedND(varsRDecl, varsNDecl, varsDec):
     return r
 
 
+def warnings(varsNDecl, varsRDecl, conds, notInic):
+    vs = varsNDecl | varsRDecl | conds | notInic
+    vars = organizarLinha(vs)
+    r='''<div class="w3-panel w3-light-grey w3-topbar w3-bottombar w3-border-teal">
+    <h2 style="color: teal"><b> → Warnings</b></h2>'''
+    for v in vars:
+        if 'tipo' in vars[v]:
+            r = r + '<p> (<u>line ' + str(vars[v]['pos'][0]) +', column ' + str(vars[v]['pos'][1])+'</u>)' + ': Variável <b>' + v + '</b> redeclarada.</p>'
+        elif 'aninh' in vars[v] and vars[v]['aninh']:
+                r = r + '<p> (<u>line ' + str(vars[v]['pos'][0]) +', column ' + str(vars[v]['pos'][1])+'</u>)<b> ' + v +'</b>: Possibilidade de aninhamento com a condição anterior.</p>'
+        elif 'qt' in vars[v]:
+            r = r + '<p> (<u>line ' + str(vars[v]['pos'][0]) +', column ' + str(vars[v]['pos'][1])+'</u>)' + ': Variável <b>' + v + '</b> não inicializada e utilizada ' + str(vars[v]['qt']) + 'x ao longo do programa.</p>'
+        elif 'aninh' not in vars[v] :             
+            r = r + '<p> (<u>line ' + str(vars[v]['pos'][0]) +', column ' + str(vars[v]['pos'][1])+'</u>)' + ': Variável <b>' + v + '</b> não declarada.</p>'
+    return r +  '''
+</div>'''
 
-
-def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst, nomeFich):
+def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst, nomeFich, conds, notInic):
     r = '<h2 class="w3-light-grey w3-center w3-border-top w3-border-bottom" style="text-shadow:1px 1px 0 #444">Analisador de código fonte do ficheiro "'+ nomeFich+ '"</h2>'
     r = r + varsDecl(varsDec)
 
@@ -197,12 +215,12 @@ def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst,
     r = r + " \n <tr> <th> Nº Inst. Condicionais </th><th>" + str(tipoInstrucoes['cond']) + "</th></tr>"
     r = r + " \n <tr> <th> Nº Funções </th><th>" + str(tipoInstrucoes['funcoes']) + "</th></tr>"
     r = r + " \n <tr> <th> Total Instruções </th><th>" + str(totalInst) + "</th></tr></table>"
-    #if (inInst['total']!=0):
-    #    r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(inInst['total']) + "</b> situações de aninhamento e o nível máximo de instruções condicionais aninhadas é <b>" + str(inInst['maior']) + "</b>. Sugestões de simplificação são mencionadas no código acima.</p></p> "
-    #else:
-    #    r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(inInst['total']) + "</b> situações de aninhamento."
+    if (inInst['total']!=0):
+        r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(inInst['total']) + "</b> situações de aninhamento e o nível máximo de instruções condicionais aninhadas é <b>" + str(inInst['maior']) + ".</b></p></p> "
+    else:
+       r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(inInst['total']) + "</b> situações de aninhamento."
+    r = r + warnings(varsNDecl, varsRDecl, conds, notInic)
 
-    
     return r + str('''</body></html>''')
 
 

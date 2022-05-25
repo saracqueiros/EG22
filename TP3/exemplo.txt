@@ -1,8 +1,33 @@
-int x = 4 * 4 - 3;
-string s = "algo";
-int lista [] = {12, 14};
-dict d = dict();
-string h;
-string h;
-m = algo;
-dict d = dict();
+def exemplo(string s){
+    int x = 4 * 4 - 3;
+    s = "algo";
+    int lista [] = {12, 14};
+    dict d = dict();
+    dict d;
+    string h;
+    num = lista[0];
+    if(num == x ){
+        print("isto até funciona"); 
+    };
+    while (h < "letra"){
+        string x1 = "w" ;
+        if(x == 25 ){
+            if(lista){
+            } else {
+                tuple t1 = (1, "cenas");
+                conj c1 = {"algo", "mais algo"};
+            };
+        };
+    };
+    for ( int i = 0; i < 1 ; i = i + 1) {};
+    do{
+        s = input(); 
+    } while( 1 == 1);
+    d = {"algo":1};   
+    return x, y
+}
+
+
+if(x != 25 ){
+    if(h){};
+};
