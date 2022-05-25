@@ -1,9 +1,11 @@
+from ctypes import sizeof
 from re import S, X
 from lark import Discard
 from lark import Lark,Token
 from lark.tree import pydot__tree_to_png
 from lark.visitors import Interpreter
 from html import beginHtml, finalData
+from sys import argv
 import copy
 
 #Testar:
@@ -17,27 +19,36 @@ class MyInterpreter (Interpreter):
       self.varsRDecl = dict()
       self.tipoInstrucoes = {'declaracoes': 0, 'atribuicoes': 0, 'io': 0, 'ciclos': 0, 'cond': 0, 'funcoes': 0}
       self.totalInst = 0
-      self.forC = 0
       self.inInst = {'atual': 0, 'maior': 0, 'total': 0}
       self.aninhavel  = False 
+      self.forC = 0
       self.html = beginHtml()
   
   def start(self, tree):
     self.visit(tree.children[0])
     self.html = self.html + self.dadosfinais() 
-    return self.html
+    return  beginHtml() + self.dadosfinais() 
 
   def dadosfinais(self):
-    return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst)
+    return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1])
 
-  
+  def variaveis(self, tree):
+    if self.forC == 0:
+      self.html = self.html + "<p class='code'>" 
+    self.visit(tree.children[0])
+    self.html = self.html + tree.children[1]
+    if self.forC == 0:
+      self.html = self.html + "</p></p>"   
+
+
+
   def declaracoes(self, tree):
     #declaracoes: decint | decstring | decdict | declist | decconj | dectuplos | decfloat | decinput 
     #self.maior()
     self.totalInst +=1
     self.tipoInstrucoes['declaracoes'] += 1
     dec = self.visit(tree.children[0])
-    #Verificar que a var ainda não foi declarada
+    #Verificar que a var ainda não foi declarada ou se o nome da var existe mas são tipos diferentes
     if (dec[1] not in self.varsDecl or (dec[1] in self.varsDecl and self.varsDecl[dec[1]]['tipo']!= dec[0] )):
       if(len(dec) > 3):
         if(dec[2] == "["):
@@ -50,35 +61,38 @@ class MyInterpreter (Interpreter):
     #Se já foi declarada é anunciada com uma classe própria para tal 
     else:
       self.varsRDecl[dec[1]] = {"tipo" : dec[0]}
-      self.html = self.html + "<p class='code'><div class='redeclared'>"+  dec[0] + " " + dec[1]+ "<span class='redeclaredtext'>Variável redeclarada</span></div> "
+      self.html = self.html + "<div class='redeclared'>"+  dec[0] + " " + dec[1]+ "<span class='redeclaredtext'>Variável redeclarada</span></div> "
+    tokensList = []
     for elem in dec[2:]:
-        #decl tuples e ints com operacoes
-        if isinstance(elem, Token):
-          #Casos como: int x = y + 1
-          if elem.type == 'WORD' and elem not in self.varsDecl:
-            self.html = self.html + "<p class='code'><div class='error'> "+ elem + " <span class='errortext'>Variável não declarada</span></div> "
-          else:
-            if elem.type == 'WORD':
-              self.varsDecl[elem]["utilizada"] += 1
-            self.html = self.html + elem + " "
-        else:
-          for i in elem:
+      if not isinstance(elem, Token):
+        for i in elem:
             if not isinstance(i, Token):
               for ii in i:
-                 self.html = self.html + ii 
+                 tokensList.append(ii)
             else:
-              self.html = self.html + i 
-    self.html = self.html + "</p>"   
-    if (self.forC == 0):
-      self.html = self.html + '</p>'
-"""
+              tokensList.append(i)
+      elif isinstance(elem, Token):
+        tokensList.append(elem)
+    #decl tuples e ints com operacoes && Casos como: int x = y + 1
+    for tt in tokensList:
+      if tt.type == 'WORD' and tt not in self.varsDecl:
+        self.html = self.html + "<p class='code'><div class='error'> "+ tt + " <span class='errortext'>Variável não declarada</span></div> "
+        self.varsNDecl[tt] = {}
+      else:
+        if tt.type == 'WORD':
+          self.varsDecl[tt]["utilizada"] += 1
+        self.html = self.html + tt + " "
+ 
+
+
+
   def atribuicoes(self, tree):
+    # atribuicoes: WORD IGUAL (var | operacao | input |lista | dicionario) 
     self.totalInst += 1
-    self.maior()
+    #self.maior()
     self.tipoInstrucoes['atribuicoes'] += 1
     var = self.visit_children(tree)
-    if (self.forC == 0):
-      self.html = self.html + '<p>'
+   
     if (var[0] not in self.varsDecl):
       self.varsNDecl[var[0]] = {}
       self.html = self.html + "<p class='code'><div class='error'> "+ var[0]+ "<span class='errortext'>Variável não declarada</span></div>"
@@ -89,10 +103,12 @@ class MyInterpreter (Interpreter):
     for elem in var[1:]:
         if isinstance(elem, Token):
             self.html = self.html + elem + " "
-        else:
+        else: 
+          if elem[0].type == 'input':
+            self.visit(elem)
+            break
           for i in elem:
-            #Utilização de variaveis nao declaradas à direita da operação 
-
+            #Utilização de variaveis nao declaradas à direita da operação =
             if i.type == 'WORD':
               if i not in self.varsDecl:
                 self.varsNDecl[i] = {}
@@ -103,17 +119,18 @@ class MyInterpreter (Interpreter):
             else:
               self.html = self.html + i + " "
     self.html = self.html +  "</p>\n"
-    if (self.forC == 0):
-      self.html = self.html + '</p>'
+    
+
 
   def input(self, tree):
-    self.maior()
+    #self.maior()
     self.totalInst += 1
     self.tipoInstrucoes['io'] += 1
     return self.visit_children(tree)
 
   def output(self, tree):
-    self.maior()
+    #output: OUTPUTW PE ESCAPED_STRING PD PV
+    #self.maior()
     tokens = self.visit_children(tree)
     self.totalInst += 1
     self.tipoInstrucoes['io'] += 1
@@ -123,34 +140,41 @@ class MyInterpreter (Interpreter):
     self.html = self.html +  "</p></p>"
     return tree
  
+
   def ciclos(self, tree):
-    self.maior()
+    #(whilee | forr | dowhile) PV
+    #self.maior()
+    self.html = self.html + "<p><p class='code'>" 
     self.totalInst += 1
     self.tipoInstrucoes['ciclos'] += 1
     result = self.visit(tree.children[0])
+    self.html = self.html +  tree.children[1]
+    self.html = self.html + "</p></p>"
+
     return result 
 
   def whilee(self, tree):
-    self.maior()
-    self.html = self.html + "<p><p class='code'>" 
+    #self.maior()
+    #WHILEW PE condicao PD CE code? CD 
     for i in range(2):
       self.html = self.html + tree.children[i] + " " 
     self.visit(tree.children[2])
     self.html = self.html + tree.children[3] + " " + tree.children[4] + " "
-    #Significa que tem código no meio 
     self.inInst['atual'] += 1
-    if len(tree.children) == 8:
-      self.visit(tree.children[5])
-      self.html = self.html + tree.children[6] + " " + tree.children[7]
-    else:
-      self.html = self.html + tree.children[5] + " " + tree.children[6]
+    #Significa que tem código no meio 
+    for elem in tree.children[5:]:
+      if not isinstance(elem, Token):
+        self.html = self.html + "<p>"
+        self.visit(tree.children[5])    
+        self.html = self.html + "</p>"
+      else: 
+        self.html = self.html + elem + " " 
     self.inInst['atual'] -= 1
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
-    self.html = self.html + "</p></p>"
-
+  
   def condicao(self, tree):
-    self.maior()
+    #self.maior()
     self.totalInst += 1
     child = self.visit_children(tree)
     flag = True #Para saber se há algum operador a escrever no meio
@@ -180,109 +204,64 @@ class MyInterpreter (Interpreter):
           flag = False
     if self.aninhavel == True:
       self.html = self.html + "<span class='aninhtext'>Pode simplificar com a condição anterior utilizando '&&'</span></div>"
-        
+    
   def forr(self, tree):
-    self.maior()
-    #forr: FORW PE variaveis condicao PV WORD IGUAL tipo PD CE code? CD PV 
+    #self.maior()
+    #forr: FORW PE variaveis condicao PV atribuicoes PD CE code? CD  
     self.inInst['atual']+= 1
     self.forC = 1
-    self.html = self.html + "<p><p class='code'>" + tree.children[0] + " " + tree.children[1] 
+    self.html = self.html + tree.children[0] + " " + tree.children[1] 
     self.visit(tree.children[2])
+    self.html = self.html 
     self.visit(tree.children[3])
     self.totalInst += 1
     self.tipoInstrucoes['atribuicoes'] += 1
     self.html = self.html + tree.children[4]
-    if (tree.children[5] not in self.varsDecl):
-      self.varsNDecl[tree.children[5]] = {}
-      self.html = self.html + "<p class='code'><div class='error'> "+ tree.children[5]+ "<span class='errortext'>Variável não declarada</span></div>"
+    self.visit(tree.children[5])
+    self.forC = 0
+    self.html = self.html + tree.children[6] + " " + tree.children[7]
+    if (len(tree.children) == 10 ):
+        self.visit(tree.children[8])
+        self.html = self.html + tree.children[9] + " "
     else:
-      self.varsDecl[tree.children[5]]["utilizada"] += 1 
-      self.varsDecl[tree.children[5]]["inic"] = 1 
-      self.html = self.html + tree.children[5] + " "
-    self.html = self.html + tree.children[6] + " "
-    self.visit(tree.children[7])
-    self.html = self.html + tree.children[8] + " " + tree.children[9] + " "
-    self.forC = 1
-    if (isinstance(tree.children[10], Token)):
-      self.html = self.html + tree.children[10] + " " + tree.children[11] + " "
-    else:
-      self.visit(tree.children[10])
-      self.html = self.html + tree.children[11] + " " + tree.children[12] + " "
+      self.html = self.html + tree.children[8] + " "
     self.inInst['atual'] -= 1
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
-    self.html = self.html +  "</p></p>"
-
-
-  def tipo(self, tree):
-    #var operacao?
-    #operacao: ((SUM|SUB|MUL|DIV|MOD) INT)+
-    var = self.visit(tree.children[0])
-    self.html = self.html + var[0]
-    operacao = self.visit(tree.children[1])
-    for op in operacao:
-      self.html = self.html + op
-
-
+  
   def dowhile (self, tree):
-    self.maior()
+    #self.maior()
     #dowhile: DOW CE code? CD WHILEW PE condicao PD PV
-    self.html = self.html + "<p><p class='code'>" 
     for elem in tree.children:
       if isinstance(elem, Token):
         self.html = self.html + elem + " "
-      else:
+      elif elem.data == 'code':
+        self.html = self.html + "<p>"
         self.visit(elem)
-    self.html = self.html + "</p>"
-
+        self.html = self.html + "</p>"
+      else: 
+        self.visit(elem)
 
   def cond(self, tree):
     #cond: IFW PE condicao PD CE code? CD else? PV
     self.totalInst += 1
     self.inInst['atual'] +=1
     self.tipoInstrucoes['cond'] += 1
-    self.html = self.html + "<p><p class='code'>" 
-    for elem in tree.children[:5]:
-      if isinstance(elem, Token):
-        self.html = self.html + elem + " "
-      else:
-        self.visit(elem)
-    if not isinstance(tree.children[5], Token): #condições para os ifs aninhados, sinalizar se puder simplificar
-      if tree.children[5].children[0].data == 'cond':
-        self.aninhavel = True
-      else: 
-        self.aninhavel = False
-      self.visit(tree.children[5])
-      self.html = self.html + tree.children[6] + " " 
-      if not isinstance(tree.children[7], Token): #Se houver um else
-        self.visit(tree.children[7])
-        self.html = self.html + tree.children[8] + " " 
-      else:
-        self.html = self.html + tree.children[7] + " " 
-    else:
-      self.html = self.html + tree.children[5] + " " 
-      if not isinstance(tree.children[6], Token): #Se houver um else sem codigo no if 
-        self.visit(tree.children[6])
-        self.html = self.html + tree.children[7] + " " 
-      else:
-        self.html = self.html + tree.children[6] + " " 
-    self.html = self.html + "</p>"
-    self.aninhavel = False
+        
     self.inInst['atual'] -=1
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
-
 
   def elsee(self,tree):
     #elsee: ELSEW CE code CD
     for elem in tree.children:
       if not isinstance(elem, Token):
+        self.html = self.html + "<p>"
         self.visit(elem)
+        self.html = self.html + "</p>"
       else:
         self.html = self.html + elem + " "
-
-
-    
+ 
   def funcao(self, tree):
     #DEFW WORD PE args PD CE code? return? CD 
     self.totalInst += 1
@@ -324,7 +303,7 @@ class MyInterpreter (Interpreter):
         self.html = self.html + elem.children[0] + " "
 
 
-  
+""" 
   def maior(self):
     if self.inInst['atual'] > self.inInst['maior']:
       self.inInst['maior'] = self.inInst['atual']
@@ -333,14 +312,14 @@ class MyInterpreter (Interpreter):
 ## Primeiro precisamos da GIC
 grammar = '''
 start: code
-code: (variaveis | funcao | cond | output | ciclos)+
+code: (variaveis | funcao | cond | output | ciclos)+ 
 
-variaveis: (declaracoes | atribuicoes ) PV
-declaracoes: decint | decstring | decdict | declist | decconj | dectuplos | decfloat | decinput 
+variaveis: (declaracoes | atribuicoes) PV 
+declaracoes: decint | decstring | decdict | declist | decconj | dectuplos | decfloat | decinput
 decint : INTW WORD (IGUAL (INT | operacao))? 
   operacao : (NUMBER|WORD) ((SUM | SUB | MUL | DIV | MOD) (NUMBER|WORD))+
-decstring : STRINGW WORD (IGUAL ESCAPED_STRING)?
-decdict : DICTW WORD (IGUAL DICTW PE PD)?
+decstring : STRINGW WORD (IGUAL ESCAPED_STRING)? 
+decdict : DICTW WORD (IGUAL DICTW PE PD)? 
 declist : INTW WORD (PRE NUMBER? PRD)+ (IGUAL (content | ultracontent))?
   content : CE (INT (VIR INT)*)* CD
   ultracontent: CE (content (VIR content)*)* CD
@@ -364,10 +343,10 @@ funcao: DEFW WORD PE args PD CE code? return? CD
 
 cond: IFW PE condicao PD CE code? CD elsee? PV
   condicao: var ((II|MAIOR|MENOR|DIF|E|OU) var)?
-  elsee: ELSEW CE code CD
+  elsee: ELSEW CE code? CD
   ELSEW: "else"
 
-output: OUTPUTW PE ESCAPED_STRING PD PV
+output: OUTPUTW PE (ESCAPED_STRING|WORD) PD PV
 
 ciclos: (whilee | forr | dowhile) PV
 whilee: WHILEW PE condicao PD CE code? CD 
@@ -411,19 +390,18 @@ WORD: "a".."z"("a".."z"|"0".."9")*
 
 
 %import common.WS
-%import common.NEWLINE 
 %import common.INT
 %import common.FLOAT
 %import common.ESCAPED_STRING
 %import common.NUMBER
-%ignore NEWLINE
+
 %ignore WS
 '''
 
-f = open("exemplo.txt", "r")
+f = open(argv[1], "r")
 
 linhas = f.read()
-p = Lark(grammar) 
+p = Lark(grammar, propagate_positions = True) 
 parse_tree = p.parse(linhas)
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)

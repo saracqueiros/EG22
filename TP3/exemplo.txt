@@ -1,10 +1,8 @@
-int x = 4;
-int h;
-int m = 3 + y;
-string s;
-string s = "coisas";
-tuple t1 = (1, "cenas");
-conj c1 = {"algo", "mais algo"};
-int l [1][2] = {{1}, {2}};
+int x = 4 * 4 - 3;
+string s = "algo";
+int lista [] = {12, 14};
 dict d = dict();
-float f1 = 1.1;
+string h;
+string h;
+m = algo;
+dict d = dict();

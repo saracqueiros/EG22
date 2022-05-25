@@ -98,26 +98,38 @@ tr:nth-child(even) {
   background-color: #dddddd;
 }
 </style>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body >
 
-<body> <p><b> Código anotado:</b></p>
-  <p class='code'>
-int x = 4 </p></p><p class='code'>
-int h </p></p><p class='code'>
-int m = 3+y</p></p><p class='code'>
-string s </p></p><p class='code'><div class='redeclared'>string s<span class='redeclaredtext'>Variável redeclarada</span></div> = "coisas" </p></p><p class='code'>
-tuple t1 = ( 1, "cenas") </p></p><p class='code'>
-conj c1 = { "algo" , "mais algo" } </p></p><p class='code'>
-int l [ 1 ] [ 2 ] = {{1},{2}}</p></p><p class='code'>
-dict d = dict ( ) </p></p><p class='code'>
-float f1 = 1.1 </p></p><p><p class='code'>-------------------------Análise Geral-------------------------
-<p>Variáveis declaradas: </p><ul><li><b>x</b>: int</li><li><b>h</b>: int</li><li><b>m</b>: int</li><li><b>s</b>: string</li><li><b>t1</b>: tuple</li><li><b>c1</b>: conj</li><li><b>l</b>: int[]</li><li><b>d</b>: dict</li><li><b>f1</b>: float</li></ul></p></p><p><p class='code'>Variáveis não declaradas: <ul></ul></p></p><p><p class='code'>Variaveis redeclaradas: <ul><li><b>s</b></li> </ul></p></p><p><p class='code'>Variaveis declaradas e nunca mencionadas: <ul><li><b>x</b> </li><li><b>h</b> </li><li><b>m</b> </li><li><b>s</b> </li><li><b>t1</b> </li><li><b>c1</b> </li><li><b>l</b> </li><li><b>d</b> </li><li><b>f1</b> </li></ul></p></p>
-<p><p class='code'>-------------------------------Análise Instruções-------------------------------
-<p> <table>
- <tr> <th> Nº Declarações </th><th>10</th></tr> 
- <tr> <th> Nº Atribuições </th><th>0</th></tr> 
+  <h2 class="w3-light-grey w3-center w3-border-top w3-border-bottom" style="text-shadow:1px 1px 0 #444">Analisador de código fonte do ficheiro "exemplo.txt"</h2> <div class="w3-round w3-teal">
+            <div class="w3-container">
+            <h2> → Variáveis Declaradas</h2>
+            <div class="w3-responsive">
+            <table class="w3-table-all", style="color:black">
+            <tr>
+                <th>Variável</th>
+                <th>conj</th>
+                <th>dict</th>
+                <th>float</th>
+                <th>int</th>
+                <th>list</th>
+                <th>string</th>
+                <th>tuple</th>
+            </tr> <tr><td><b>d<b></td><td> </td><td> X </td><td> </td><td> </td><td> </td><td> </td><td> </td></tr><tr><td><b>x<b></td><td> </td><td> </td><td> </td><td> X </td><td> </td><td> </td><td> </td></tr><tr><td><b>lista<b></td><td> </td><td> </td><td> </td><td> </td><td> X </td><td> </td><td> </td></tr><tr><td><b>s<b></td><td> </td><td> </td><td> </td><td> </td><td> </td><td> X </td><td> </td></tr><tr><td><b>h<b></td><td> </td><td> </td><td> </td><td> </td><td> </td><td> X </td><td> </td></tr>   
+    </table>
+    <h2></h2></div></div></div>
+    <div class="w3-panel w3-pale-blue w3-bottombar w3-border-teal w3-border"> <h2><b> → Warnings sobre variáveis</b></h2><table class="w3-table-all">
+    <tr>
+        <th><b>Variáveis Redeclaradas</b> <span class="w3-badge w3-blue">2</span></th>
+        <th><b>Variáveis Não Declaradas</b> <span class="w3-badge w3-red">2</span></th>
+        <th><b>Variáveis Não Inicializadas</b> <span class="w3-badge w3-yellow">1</span></th>
+        <th><b>Variáveis Nunca Utilizadas</b> <span class="w3-badge w3-purple">5</span></th>
+    </tr><tr><td><ul class="w3-ul w3-center"><li>h</li><li>d</li></ul></td><td><ul class="w3-ul w3-center"><li>m</li><li>algo</li></ul></td><td><ul class="w3-ul w3-center"><li>h</li></ul></td><td><ul class="w3-ul w3-center"><li>x</li><li>s</li><li>lista</li><li>d</li><li>h</li></ul></td></tr></table></div><div class="w3-panel w3-teal"><h2> → Análise tipo Instruções </h2></div> <table>
+ <tr> <th> Nº Declarações </th><th>7</th></tr> 
+ <tr> <th> Nº Atribuições </th><th>1</th></tr> 
  <tr> <th> Nº Input/Output </th><th>0</th></tr> 
  <tr> <th> Nº Ciclos </th><th>0</th></tr> 
  <tr> <th> Nº Inst. Condicionais </th><th>0</th></tr> 
  <tr> <th> Nº Funções </th><th>0</th></tr> 
- <tr> <th> Total Instruções </th><th>10</th></tr></table> 
+ <tr> <th> Total Instruções </th><th>8</th></tr></table> 
 <p><p class='code'> NOTA: Existem <b>0</b> situações de aninhamento.</body></html>
