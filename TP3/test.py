@@ -3,6 +3,8 @@ from lark import Lark,Token
 from lark.tree import pydot__tree_to_png
 from lark.visitors import Interpreter
 from sys import argv
+import graphviz
+
 
 class MyInterpreter (Interpreter):
 
@@ -12,11 +14,27 @@ class MyInterpreter (Interpreter):
   def start(self, tree):
     self.visit(tree.children[0])
     return tree
+
+  def code(self, tree):
+    node1 = self.visit((tree.children[0]))    
+    for child in tree.children[1:]:
+      node2 = self.visit(child)
+      g.edge(node1, node2)
+      node1 = node2
   
+  def variaveis(self, tree):
+    return self.visit(tree.children[0])
+    
   def declaracoes(self, tree):
     r = self.visit(tree.children[0])
-    print(r[0].line, r[0].column)
+    f = ''
+    for l in r :
+      f = f + ' '+ l
+    return f
     
+
+    
+  
 
 grammar = '''
 start: code
@@ -41,10 +59,18 @@ WORD: "a".."z"("a".."z"|"0".."9")*
 %ignore WS
 '''
 f = open(argv[1], "r")
+g = graphviz.Digraph('G', filename='process.gv', engine='sfdp')
+g.graph_attr['rankdir'] = 'TB'
+
+
+
 
 linhas = f.read()
 p = Lark(grammar, propagate_positions = True) 
 parse_tree = p.parse(linhas)
+
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)
 #print(data)
+print(g)
+g.render(directory='doctest-output', view=True)  

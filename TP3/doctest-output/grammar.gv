@@ -1,0 +1,18 @@
+digraph grammar {
+	graph [bgcolor=aliceblue rankdir=TB]
+	"int x = 4 * 4 - 3 " [color=blue fontcolor=blue]
+	" s = \"algo\"" [color=green fontcolor=green]
+	"int x = 4 * 4 - 3 " -> " s = \"algo\""
+	"int lista [ ] = { 12 , 14 } " [color=blue fontcolor=blue]
+	" s = \"algo\"" -> "int lista [ ] = { 12 , 14 } "
+	"dict d = dict ( ) " [color=blue fontcolor=blue]
+	"int lista [ ] = { 12 , 14 } " -> "dict d = dict ( ) "
+	"dict d " [color=blue fontcolor=blue]
+	"dict d = dict ( ) " -> "dict d "
+	"string h " [color=blue fontcolor=blue]
+	"dict d " -> "string h "
+	" num = lista[0]" [color=green fontcolor=green]
+	"string h " -> " num = lista[0]"
+	"conj c1 = { \"algo\" , \"mais algo\" } " [color=blue fontcolor=blue]
+	" num = lista[0]" -> "conj c1 = { \"algo\" , \"mais algo\" } "
+}

@@ -1,0 +1,6 @@
+digraph G {
+	graph [rankdir=TB]
+	" int x = 4" -> " int x = 5"
+	" int x = 5" -> " int x = 6"
+	" int x = 6" -> " int x = 7"
+}

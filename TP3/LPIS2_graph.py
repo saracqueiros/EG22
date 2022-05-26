@@ -1,4 +1,5 @@
 from ctypes import sizeof
+from distutils.command.build import build
 from re import S, X
 from lark import Discard
 from lark import Lark,Token
@@ -7,6 +8,9 @@ from lark.visitors import Interpreter
 from html import beginHtml, finalData
 from sys import argv
 import copy
+import graphviz
+from graph import *
+
 
 #Testar:
 #: > result.html | python LPIS2_graph.py >> result.html 
@@ -25,17 +29,26 @@ class MyInterpreter (Interpreter):
       self.aninhavel  = False 
       self.forC = 0
       self.html = beginHtml()
+      self.node1 = ""
   
-  def start(self, tree):
-    self.visit(tree.children[0])
-    return  beginHtml() + self.dadosfinais() 
-
   def dadosfinais(self):
     return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1], self.conds, self.notInic)
 
-  def variaveis(self, tree):
+
+  def start(self, tree):
     self.visit(tree.children[0])
-    self.html = self.html + tree.children[1]  
+    #return beginHtml() + self.dadosfinais() 
+
+  
+  def code(self, tree):
+      self.node1 = self.visit((tree.children[0]))    
+      for child in tree.children[1:]:
+        node2 = self.visit(child)
+        g.edge(self.node1, node2)
+        self.node1 = node2
+
+  def variaveis(self, tree):
+    return self.visit(tree.children[0])
 
   def declaracoes(self, tree):
     #declaracoes: decint | decstring | decdict | declist | decconj | dectuplos | decfloat | decinput 
@@ -44,7 +57,7 @@ class MyInterpreter (Interpreter):
     self.tipoInstrucoes['declaracoes'] += 1
     dec = self.visit(tree.children[0])
     #Verificar que a var ainda não foi declarada ou se o nome da var existe mas são tipos diferentes
-    if (dec[1] not in self.varsDecl or (dec[1] in self.varsDecl and self.varsDecl[dec[1]]['tipo']!= dec[0] )):
+    '''if (dec[1] not in self.varsDecl or (dec[1] in self.varsDecl and self.varsDecl[dec[1]]['tipo']!= dec[0] )):
       if(len(dec) > 3):
         if(dec[2] == "["):
           self.varsDecl[dec[1]] = {"tipo" : dec[0] + "[]", "inic" : 1, "utilizada": 0}
@@ -54,7 +67,7 @@ class MyInterpreter (Interpreter):
         self.varsDecl[dec[1]] = {"tipo" : dec[0], "inic" : 0, "utilizada": 0}
     #Se já foi declarada é anunciada com uma classe própria para tal 
     else: #Guardar as posições em que ocorreu o erro 
-      self.varsRDecl[dec[1]] = {"tipo" : dec[0], "pos": (dec[0].line, dec[0].column)}
+      self.varsRDecl[dec[1]] = {"tipo" : dec[0], "pos": (dec[0].line, dec[0].column)}'''
     tokensList = []
     for elem in dec[2:]:
       if not isinstance(elem, Token):
@@ -67,12 +80,13 @@ class MyInterpreter (Interpreter):
       elif isinstance(elem, Token):
         tokensList.append(elem)
     #decl tuples e ints com operacoes && Casos como: int x = y + 1
-    for tt in tokensList:
+    '''for tt in tokensList:
       if tt.type == 'WORD' and tt not in self.varsDecl:
         self.varsNDecl[tt] = {"pos": (dec[0].line, dec[0].column)}
       else:
         if tt.type == 'WORD':
-          self.varsDecl[tt]["utilizada"] += 1
+          self.varsDecl[tt]["utilizada"] += 1'''
+    return buildNodeDec(dec, tokensList, g)
  
 
   def atribuicoes(self, tree):
@@ -81,7 +95,7 @@ class MyInterpreter (Interpreter):
     self.maior()
     self.tipoInstrucoes['atribuicoes'] += 1
     var = self.visit_children(tree)
-    if (var[0] not in self.varsDecl):
+    '''if (var[0] not in self.varsDecl):
       if var[0] not in self.varsNDecl:
         self.varsNDecl[var[0]] = {"pos": (var[0].line, var[0].column)}
     else:
@@ -100,7 +114,8 @@ class MyInterpreter (Interpreter):
               if i not in self.varsDecl:
                 self.varsNDecl[i] = {"pos": (i.line, i.column)}
               else:
-                self.varsDecl[i]["utilizada"] += 1
+                self.varsDecl[i]["utilizada"] += 1'''
+    return buildNodeAtr(var, g)
   
 
   def input(self, tree):
@@ -140,6 +155,7 @@ class MyInterpreter (Interpreter):
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
 
+
   def cond(self, tree):
     #cond: IFW PE condicao PD CE code? CD else? PV
     self.totalInst += 1
@@ -153,7 +169,6 @@ class MyInterpreter (Interpreter):
       if tree.children[5].children[0].data == 'cond' and isinstance(tree.children[5].children[size-2].children[sizeeee], Token) and isinstance(tree.children[sizehere-2], Token): #o 1 elem do codigo é um if
         self.aninhavel = True 
       else:
-
         self.aninhavel = False 
     else:
       self.aninhavel = False
@@ -346,13 +361,20 @@ WORD: "a".."z"("a".."z"|"0".."9")*
 '''
 
 f = open(argv[1], "r")
+g = graphviz.Digraph('grammar')
 
+
+g.graph_attr['rankdir'] = 'TB'
+g.graph_attr['bgcolor'] ="aliceblue"
 linhas = f.read()
 p = Lark(grammar, propagate_positions = True) 
 parse_tree = p.parse(linhas)
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)
 print(data)
+
+
+g.render(directory='doctest-output', view=True)  
 
 
 
