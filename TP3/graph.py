@@ -83,3 +83,10 @@ def buildNodeWhile(self, cond, g):
         g.edge(self.nodeAnt, edgewhile)
         self.nodeAnt = edgewhile
     return edgewhile
+
+
+def buildNodeWhileDo(self, text, g):
+    g.node(text,fontcolor='purple', color='purple')
+    g.edge(self.nodeAnt, text)
+    self.nodeAnt = text
+    return text

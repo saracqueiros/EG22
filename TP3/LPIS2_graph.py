@@ -256,13 +256,18 @@ class MyInterpreter (Interpreter):
   def dowhile (self, tree):
     self.maior()
     #dowhile: DOW CE code? CD WHILEW PE condicao PD PV
+    node = buildNodeWhileDo(self, 'DO', g)
+    cndt = ''
     for elem in tree.children:
       if isinstance(elem, Token):
         self.html = self.html + elem + " "
       elif elem.data == 'code':
         self.visit(elem)
-      else: 
-        self.visit(elem)
+      else: #condicao
+        cndt = self.visit(elem)
+    whiledo = buildNodeWhileDo(self, 'while' + cndt, g)
+    g.edge(whiledo, node)
+    self.nodeAnt = node
 
   def elsee(self,tree):
     #elsee: ELSEW CE code CD
