@@ -146,7 +146,8 @@ class MyInterpreter (Interpreter):
   def whilee(self, tree):
     self.maior()
     #WHILEW PE condicao PD CE code? CD 
-    self.visit(tree.children[2])
+    cndt = self.visit(tree.children[2])
+    nodeWhile = buildNodeWhile(self, cndt, g)
     self.inInst['atual'] += 1
     #Significa que tem código no meio 
     self.aninhavel = False
@@ -156,6 +157,8 @@ class MyInterpreter (Interpreter):
     self.inInst['atual'] -= 1
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
+    g.edge(self.nodeAnt, nodeWhile)
+    self.nodeAnt = nodeWhile
 
 
   def cond(self, tree):

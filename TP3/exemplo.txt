@@ -1,18 +1,8 @@
-
-if(x){
-    s = input();
-    v = 9;
-    for(int i = 0; i < 20; i = i+ 1){ 
-        int m;
-        c = j+1;
-        if(m >4){
-            po = "po";
-        }
-        else{
-            p1 = "pi";
-        };
-   
-    };
-    print("oi oi");
-    
+l = 9;
+while(x < 8){
+    print(x);
+    if(x == 5){}else{print("eu");};
+    for(int i = 0; i < 6; i = i +1){l = 1;};
 };
+
+int m = 5;

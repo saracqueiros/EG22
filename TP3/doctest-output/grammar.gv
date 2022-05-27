@@ -1,38 +1,30 @@
 digraph grammar {
 	graph [bgcolor=aliceblue rankdir=TB]
-	"if (x)" [color=red fontcolor=red shape=diamond]
-	beginCode -> "if (x)"
-	"input()" [color=brown fontcolor=brown]
-	"if (x)" -> "input()"
-	" s = input()" [color=green fontcolor=green]
-	"input()" -> " s = input()"
-	" v = 9" [color=green fontcolor=green]
-	" s = input()" -> " v = 9"
-	"int i = 0 " [color=blue fontcolor=blue]
-	" v = 9" -> "int i = 0 "
-	"for (i<20)" [color=purple fontcolor=purple]
-	"int i = 0 " -> "for (i<20)"
-	" i = i+1" [color=green fontcolor=green]
-	" i = i+1" -> "for (i<20)"
-	"int m " [color=blue fontcolor=blue]
-	"for (i<20)" -> "int m "
-	" c = j+1" [color=green fontcolor=green]
-	"int m " -> " c = j+1"
-	"if (m>4)" [color=red fontcolor=red shape=diamond]
-	" c = j+1" -> "if (m>4)"
-	" po = \"po\"" [color=green fontcolor=green]
-	"if (m>4)" -> " po = \"po\""
-	endif2 [color=red fontcolor=red shape=diamond]
-	" po = \"po\"" -> endif2
-	" p1 = \"pi\"" [color=green fontcolor=green]
-	"if (m>4)" -> " p1 = \"pi\""
-	endif2 [color=red fontcolor=red shape=diamond]
-	" p1 = \"pi\"" -> endif2
-	endif2 -> " i = i+1"
-	"print(\"oi oi\")" [color=brown fontcolor=brown]
-	"for (i<20)" -> "print(\"oi oi\")"
+	" l = 9" [color=green fontcolor=green]
+	beginCode -> " l = 9"
+	"while (x<8)" [color=purple fontcolor=purple]
+	" l = 9" -> "while (x<8)"
+	"print(x)" [color=brown fontcolor=brown]
+	"while (x<8)" -> "print(x)"
+	"if (x==5)" [color=red fontcolor=red shape=diamond]
+	"print(x)" -> "if (x==5)"
 	endif1 [color=red fontcolor=red shape=diamond]
-	"print(\"oi oi\")" -> endif1
-	"if (x)" -> endif1
-	endif1 -> endCode
+	"if (x==5)" -> endif1
+	"print(\"eu\")" [color=brown fontcolor=brown]
+	"if (x==5)" -> "print(\"eu\")"
+	endif1 [color=red fontcolor=red shape=diamond]
+	"print(\"eu\")" -> endif1
+	"int i = 0 " [color=blue fontcolor=blue]
+	endif1 -> "int i = 0 "
+	"for (i<6)" [color=purple fontcolor=purple]
+	"int i = 0 " -> "for (i<6)"
+	" i = i+1" [color=green fontcolor=green]
+	" i = i+1" -> "for (i<6)"
+	" l = 1" [color=green fontcolor=green]
+	"for (i<6)" -> " l = 1"
+	" l = 1" -> " i = i+1"
+	"for (i<6)" -> "while (x<8)"
+	"int m = 5 " [color=blue fontcolor=blue]
+	"while (x<8)" -> "int m = 5 "
+	"int m = 5 " -> endCode
 }

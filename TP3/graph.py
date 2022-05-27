@@ -73,3 +73,13 @@ def buildNodeIO(self, tokens, g):
         g.edge(self.nodeAnt, edge)
         self.nodeAnt = edge
     return edge
+
+
+
+def buildNodeWhile(self, cond, g):
+    edgewhile = 'while '+ cond
+    g.node(edgewhile, fontcolor='purple', color='purple')
+    if self.nodeAnt != "":
+        g.edge(self.nodeAnt, edgewhile)
+        self.nodeAnt = edgewhile
+    return edgewhile
