@@ -1,8 +1,10 @@
-for(int i =0; i < 8; i = i+1){
-do{
-    if(x){int m = 0;}
-    else{ print("oi");};
-} while(x > 0);
-l = 9;
+int x = 4;
+if(x>0){
+    int m = 2;
+    h = 15;
+    if(x1>0){};
+}else{
+    s = input();
 };
-print("estamos no fim");
+int xw = 4;
+print("ola");

@@ -1,5 +1,0 @@
-digraph G {
-	graph [rankdir=TB]
-	edge [arrowhead=vee arrowsize=2]
-	x -> y
-}

@@ -226,5 +226,3 @@ def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst,
 
     return r + str('''</body></html>''')
 
-
-    

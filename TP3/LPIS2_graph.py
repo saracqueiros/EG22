@@ -11,6 +11,7 @@ from sys import argv
 import copy
 import graphviz
 from graph import *
+from sdg import *
 
 
 #Testar:
@@ -31,17 +32,18 @@ class MyInterpreter (Interpreter):
       self.graphControl = {'aninh': 0 , 'total': 0, 'inFor': False}
       self.html = beginHtml()
       self.nodeAnt = "beginCode"
+      self.sdgControl = {'instMae': 0}
   
   def dadosfinais(self):
     return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1], self.conds, self.notInic)
 
 
   def start(self, tree):
+    sdg.node("ENTRY", shape= 'box')
     self.visit(tree.children[0])
     g.edge(self.nodeAnt, "endCode")
-    return self.html + self.dadosfinais()
+    #return self.html + self.dadosfinais()
     
-
   
   def code(self, tree):
     for child in tree.children[0:]:
@@ -86,7 +88,9 @@ class MyInterpreter (Interpreter):
       else:
         if tt.type == 'WORD':
           self.varsDecl[tt]["utilizada"] += 1
-    return buildNodeDec(self, dec, tokensList, g)
+    node = buildNodeDec(self, dec, tokensList, g)
+    sdgDec(self, node, sdg)
+    return node
  
 
   def atribuicoes(self, tree):
@@ -113,7 +117,9 @@ class MyInterpreter (Interpreter):
                 self.varsNDecl[i] = {"pos": (i.line, i.column)}
               else:
                 self.varsDecl[i]["utilizada"] += 1
-    return buildNodeAtr(self, var, g, self.graphControl['inFor'])
+    node = buildNodeAtr(self, var, g, self.graphControl['inFor'])
+    sdgAtr(self, node, sdg)
+    return node
   
 
   def input(self, tree):
@@ -121,7 +127,8 @@ class MyInterpreter (Interpreter):
     self.totalInst += 1
     self.tipoInstrucoes['io'] += 1
     r = self.visit_children(tree)
-    buildNodeIO(self, r, g)
+    #buildNodeIO(self, r, g)
+    #sdgIO(self, r, sdg)
     return r
 
   def output(self, tree):
@@ -129,6 +136,7 @@ class MyInterpreter (Interpreter):
     self.maior()
     r = self.visit_children(tree)
     buildNodeIO(self, r, g)
+    sdgIO(self, r, sdg)
     self.totalInst += 1
     self.tipoInstrucoes['io'] += 1
     return tree
@@ -170,6 +178,8 @@ class MyInterpreter (Interpreter):
     self.tipoInstrucoes['cond'] += 1
     nodeCond = self.visit(tree.children[2])
     beginIf = buildNodeCond(self, nodeCond, g)
+    sdgIfs(self, beginIf, sdg)
+    temElse = False
     if not isinstance(tree.children[5], Token):#Tem codigo
       size = len(tree.children[5].children)
       sizehere = len(tree.children[4:])
@@ -183,6 +193,7 @@ class MyInterpreter (Interpreter):
     for rule in tree.children:
       if not isinstance(rule, Token):
         if rule.data == 'elsee':
+          sdgElse(self,beginIf, 'else', sdg)
           endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
           self.nodeAnt = beginIf
         edge = self.visit(rule)
@@ -198,6 +209,8 @@ class MyInterpreter (Interpreter):
     sizehere = len(tree.children)
     if isinstance(tree.children[sizehere-2], Token):#Se não tiver um else
       g.edge(beginIf, endIf)
+    temElse = False
+
     return endIf
   
   def condicao(self, tree):
@@ -391,20 +404,28 @@ WORD: "a".."z"("a".."z"|"0".."9")*
 
 f = open(argv[1], "r")
 g = graphviz.Digraph('grammar', format='png')
-
-
 g.graph_attr['rankdir'] = 'TB'
 g.graph_attr['bgcolor'] ="aliceblue"
+
+
+sdg = graphviz.Digraph('sdg', format='png')
+sdg.graph_attr['rankdir'] = 'TB'
+#sdg.graph_attr['bgcolor'] ="mistyrose1"
+
+
+
 linhas = f.read()
 p = Lark(grammar, propagate_positions = True) 
 parse_tree = p.parse(linhas)
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)
-g.render(directory='doctest-output', view=False)  
+#g.render(directory='doctest-output', view=False)  
+sdg.render(directory='doctest-output', view=True)  
 
 
 
-print(data)
+
+#print(data)
 
 
 
