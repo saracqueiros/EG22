@@ -1,9 +1,7 @@
 digraph grammar {
 	graph [bgcolor=aliceblue rankdir=TB]
-	"int x " [color=blue fontcolor=blue]
-	beginCode -> "int x "
 	"if (x)" [color=red fontcolor=red shape=diamond]
-	"int x " -> "if (x)"
+	beginCode -> "if (x)"
 	" v = 9" [color=green fontcolor=green]
 	"if (x)" -> " v = 9"
 	"int i = 0 " [color=blue fontcolor=blue]

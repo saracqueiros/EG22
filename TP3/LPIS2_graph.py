@@ -28,7 +28,7 @@ class MyInterpreter (Interpreter):
       self.totalInst = 0
       self.inInst = {'atual': 0, 'maior': 0, 'total': 0}
       self.aninhavel  = False 
-      self.graphControl = {'aninh': 0 , 'total': 0, 'inFor': False, 'inIfB': "", 'inIfE': "" }
+      self.graphControl = {'aninh': 0 , 'total': 0, 'inFor': False}
       self.html = beginHtml()
       self.nodeAnt = "beginCode"
   
@@ -182,11 +182,7 @@ class MyInterpreter (Interpreter):
           self.nodeAnt = beginIf
         edge = self.visit(rule)
     self.aninhavel = False 
-    print(self.tipoInstrucoes['cond'])
-
     endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
-    self.graphControl['inIfB'] = beginIf
-    self.graphControl['inIfE'] = endIf
     self.inInst['atual'] -=1
     self.graphControl['aninh'] -= 1
     if self.inInst['atual'] == 0:
@@ -197,8 +193,6 @@ class MyInterpreter (Interpreter):
     sizehere = len(tree.children)
     if isinstance(tree.children[sizehere-2], Token):#Se não tiver um else
       g.edge(beginIf, endIf)
-    self.graphControl['inIfB'] = ''
-    self.graphControl['inIfE'] = ''
     return endIf
   
   def condicao(self, tree):
