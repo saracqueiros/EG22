@@ -1,28 +1,18 @@
 int x;
-if(x > 5){
-    l = 0;
-    }
-    else{
-        if(x > 4){
-            int c;   
-            if(x > 19){
-            int qw;   
+if(x){
+   
+    v = 9;
+    for(int i = 0; i < 20; i = i+ 1){ 
+        int m;
+        c = j+1;
+        if(m >4){
+            po = "po";
+        }
+        else{
+            p1 = "pi";
         };
-        };
-    string w ;
-};
-int x1;
-if(x1 > 5){
-    l1 = 0;
-    m = 25;
-    }
-    else{
-        if(x1 > 4){
-            int c1;   
-            if(x1 > 19){
-            int q1w;   
-        };
-        string v;
+   
     };
+     l = 3;
+    
 };
-    string w1 ;

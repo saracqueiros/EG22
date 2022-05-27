@@ -20,7 +20,7 @@ def buildNodeDec(self, dec, tokensList, g):
     return edge
 
 
-def buildNodeAtr(self, var, g):
+def buildNodeAtr(self, var, g, flag):
     edge =  " "
     for tok in var:
         if not isinstance(tok, Token):
@@ -30,7 +30,8 @@ def buildNodeAtr(self, var, g):
             edge = edge + tok+ " "
     g.node(edge, fontcolor='green', color='green')
     if self.nodeAnt != "":
-        g.edge(self.nodeAnt, edge)
+        if not flag:
+            g.edge(self.nodeAnt, edge)
         self.nodeAnt = edge
     return edge
 
@@ -44,7 +45,6 @@ def buildNodeCond(self, nodeCond, g):
     return edge
 
 def buildNodeCondEnd(self, g, counter):
-    print("entrei aqui", str(counter))
     endif = 'endif'+ str(counter)
     counter += 1
     g.node(endif, fontcolor='red', color='red', shape='diamond')
@@ -52,3 +52,12 @@ def buildNodeCondEnd(self, g, counter):
         g.edge(self.nodeAnt, endif)
         self.nodeAnt = endif
     return endif
+
+
+def buildNodeCondFor(self, g, cond):
+    edgefor = 'for '+ cond
+    g.node(edgefor, fontcolor='purple', color='purple')
+    if self.nodeAnt != "":
+        g.edge(self.nodeAnt, edgefor)
+        self.nodeAnt = edgefor
+    return edgefor

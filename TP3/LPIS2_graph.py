@@ -1,6 +1,7 @@
 from ctypes import sizeof
 from distutils.command.build import build
 from re import S, X
+from tkinter import FALSE
 from lark import Discard
 from lark import Lark,Token
 from lark.tree import pydot__tree_to_png
@@ -27,9 +28,9 @@ class MyInterpreter (Interpreter):
       self.totalInst = 0
       self.inInst = {'atual': 0, 'maior': 0, 'total': 0}
       self.aninhavel  = False 
-      self.graphControl = {'aninh': 0 , 'total': 0}
+      self.graphControl = {'aninh': 0 , 'total': 0, 'inFor': False, 'inIfB': "", 'inIfE': "" }
       self.html = beginHtml()
-      self.nodeAnt = ""
+      self.nodeAnt = "beginCode"
   
   def dadosfinais(self):
     return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1], self.conds, self.notInic)
@@ -37,10 +38,12 @@ class MyInterpreter (Interpreter):
 
   def start(self, tree):
     self.visit(tree.children[0])
+    g.edge(self.nodeAnt, "endCode")
+    
+
   
   def code(self, tree):
-    self.nodeAnt = self.visit(tree.children[0])
-    for child in tree.children[1:]:
+    for child in tree.children[0:]:
       self.visit(child)
         
   def variaveis(self, tree):
@@ -111,7 +114,7 @@ class MyInterpreter (Interpreter):
                 self.varsNDecl[i] = {"pos": (i.line, i.column)}
               else:
                 self.varsDecl[i]["utilizada"] += 1'''
-    return buildNodeAtr(self, var, g)
+    return buildNodeAtr(self, var, g, self.graphControl['inFor'])
   
 
   def input(self, tree):
@@ -175,7 +178,6 @@ class MyInterpreter (Interpreter):
     for rule in tree.children:
       if not isinstance(rule, Token):
         if rule.data == 'elsee':
-          print(self.tipoInstrucoes['cond'])
           endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
           self.nodeAnt = beginIf
         edge = self.visit(rule)
@@ -183,6 +185,8 @@ class MyInterpreter (Interpreter):
     print(self.tipoInstrucoes['cond'])
 
     endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
+    self.graphControl['inIfB'] = beginIf
+    self.graphControl['inIfE'] = endIf
     self.inInst['atual'] -=1
     self.graphControl['aninh'] -= 1
     if self.inInst['atual'] == 0:
@@ -193,6 +197,8 @@ class MyInterpreter (Interpreter):
     sizehere = len(tree.children)
     if isinstance(tree.children[sizehere-2], Token):#Se não tiver um else
       g.edge(beginIf, endIf)
+    self.graphControl['inIfB'] = ''
+    self.graphControl['inIfE'] = ''
     return endIf
   
   def condicao(self, tree):
@@ -229,14 +235,23 @@ class MyInterpreter (Interpreter):
     self.maior()
     #forr: FORW PE variaveis condicao PV atribuicoes PD CE code? CD  
     self.inInst['atual']+= 1
-    self.visit(tree.children[2])
-    self.visit(tree.children[3])
-    self.visit(tree.children[5])
+    dec = self.visit(tree.children[2])
+    self.nodeAnt = dec
+    cndt = self.visit(tree.children[3])
+    self.graphControl['inFor'] = True
+    edgefor = buildNodeCondFor(self, g, cndt )
+    atr = self.visit(tree.children[5])
+    self.graphControl['inFor'] = False 
+    g.edge(atr, edgefor)    
+    self.nodeAnt = edgefor
     if (len(tree.children) == 10 ):
         self.visit(tree.children[8])
     self.inInst['atual'] -= 1
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
+    g.edge(self.nodeAnt, atr)
+    self.nodeAnt = edgefor
+    return dec 
   
   def dowhile (self, tree):
     self.maior()
