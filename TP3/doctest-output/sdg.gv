@@ -19,10 +19,13 @@ digraph sdg {
 	then2 -> "print(\"coisas\")"
 	else2
 	"if (x1>0)" -> else2
+	" s = input()" [color=green fontcolor=green]
+	else2 -> " s = input()"
+	"if (x<0)" [color=red fontcolor=red shape=diamond]
+	else2 -> "if (x<0)"
+	"if (x<0)" -> then3
 	else1
 	"if (x>0)" -> else1
-	" s = input()" [color=green fontcolor=green]
-	else1 -> " s = input()"
 	"int xw = 4 " [color=blue fontcolor=blue]
 	ENTRY -> "int xw = 4 "
 	"print(\"ola\")" [color=brown fontcolor=brown]

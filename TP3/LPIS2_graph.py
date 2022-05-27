@@ -178,7 +178,8 @@ class MyInterpreter (Interpreter):
     self.tipoInstrucoes['cond'] += 1
     nodeCond = self.visit(tree.children[2])
     beginIf = buildNodeCond(self, nodeCond, g)
-    sdgIfs(self, beginIf, sdg,self.graphControl['aninh'])
+    vv = self.tipoInstrucoes['cond']
+    sdgIfs(self, beginIf, sdg,vv)
     temElse = False
     if not isinstance(tree.children[5], Token):#Tem codigo
       size = len(tree.children[5].children)
@@ -192,11 +193,12 @@ class MyInterpreter (Interpreter):
       self.aninhavel = False
     for rule in tree.children:
       if not isinstance(rule, Token):
+        edge = self.visit(rule)
         if rule.data == 'elsee':
-          sdgElse(self,beginIf, 'else', sdg, self.graphControl['aninh'])
+          sdgElse(self,beginIf, 'else', sdg, vv)
           endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
           self.nodeAnt = beginIf
-        edge = self.visit(rule)
+        
     self.aninhavel = False 
     endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
     self.inInst['atual'] -=1

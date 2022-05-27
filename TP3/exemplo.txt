@@ -8,6 +8,7 @@ if(x>0){
     }else{};
 }else{
     s = input();
+    if(x<0){};
 };
 int xw = 4;
 print("ola");
