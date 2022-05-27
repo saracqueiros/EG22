@@ -38,18 +38,22 @@ def sdgIO(self, tokens, sdg):
     else:
         sdg.edge(self.sdgControl['instMae'], edge)
 
-def sdgIfs(self, node, sdg):
+def sdgIfs(self, node, sdg, counter):
     sdg.node(node, fontcolor='red', color='red', shape='diamond')
     if self.inInst['atual'] == 1:
         sdg.edge('ENTRY', node)
-        sdg.edge(node, 'then')
-        self.sdgControl['instMae'] = 'then'
+        then = 'then' + str(counter)
+        sdg.edge(node, then)
+        self.sdgControl['instMae'] = then 
     else:
         sdg.edge(self.sdgControl['instMae'], node)
+        sdg.edge(node, 'then'+str(counter))
+        self.sdgControl['instMae'] = 'then' +str(counter)
+        
 
 
 
-def sdgElse(self,beginIf, nodeElse, sdg):
-    sdg.node(nodeElse)
-    sdg.edge(beginIf, nodeElse)
-    self.sdgControl['instMae'] = nodeElse
+def sdgElse(self,beginIf, nodeElse, sdg, counter):
+    sdg.node(nodeElse+str(counter))
+    sdg.edge(beginIf, nodeElse+str(counter))
+    self.sdgControl['instMae'] = nodeElse+str(counter)
