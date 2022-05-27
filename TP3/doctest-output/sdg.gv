@@ -1,25 +1,27 @@
 digraph sdg {
 	graph [rankdir=TB]
 	ENTRY [shape=box]
-	"int xw = 4 " [color=blue fontcolor=blue]
-	ENTRY -> "int xw = 4 "
-	"print(\"ola\")" [color=brown fontcolor=brown]
-	ENTRY -> "print(\"ola\")"
-	"while (xw<2)" [color=purple fontcolor=purple]
-	"while (xw<2)" -> "while (xw<2)"
-	ENTRY -> "while (xw<2)"
-	" i = 0" [color=green fontcolor=green]
-	"while (xw<2)" -> " i = 0"
-	" x = 3+3" [color=green fontcolor=green]
-	"while (xw<2)" -> " x = 3+3"
-	"if (e)" [color=red fontcolor=red shape=diamond]
-	"while (xw<2)" -> "if (e)"
-	"if (e)" -> then1
-	"print(\"sim\")" [color=brown fontcolor=brown]
-	then1 -> "print(\"sim\")"
-	else1
-	"if (e)" -> else1
-	"if (e1)" [color=red fontcolor=red shape=diamond]
-	else1 -> "if (e1)"
-	"if (e1)" -> then2
+	"int i = 0 " [color=blue fontcolor=blue]
+	ENTRY -> "int i = 0 "
+	"for (i<3)" [color=purple fontcolor=purple]
+	ENTRY -> "for (i<3)"
+	" i = i+1" [color=green fontcolor=green]
+	"for (i<3)" -> " i = i+1"
+	" i = i+1" [color=purple fontcolor=purple]
+	" i = i+1" -> "for (i<3)"
+	"while (x<8)" [color=purple fontcolor=purple]
+	"while (x<8)" -> "while (x<8)"
+	"for (i<3)" -> "while (x<8)"
+	" k = \"coisas\"" [color=green fontcolor=green]
+	"while (x<8)" -> " k = \"coisas\""
+	"if (k<3)" [color=red fontcolor=red shape=diamond]
+	"for (i<3)" -> "if (k<3)"
+	"if (k<3)" -> then1
+	"if (m==9)" [color=red fontcolor=red shape=diamond]
+	then1 -> "if (m==9)"
+	"if (m==9)" -> then2
+	"print(\"ei\")" [color=brown fontcolor=brown]
+	"for (i<3)" -> "print(\"ei\")"
+	"int k = 0 " [color=blue fontcolor=blue]
+	"for (i<3)" -> "int k = 0 "
 }

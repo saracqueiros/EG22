@@ -13,10 +13,10 @@ import graphviz
 
 def sdgDec(self, node, sdg):
     sdg.node(node, fontcolor='blue', color='blue')
-    if self.inInst['atual'] == 0:
+    if self.inInst['atual'] == 0 or self.sdgControl['inFor']:
         sdg.edge('ENTRY', node)
     else:
-        sdg.edge(self.sdgControl['instMae'], node)
+        sdg.edge(self.sdgControl['instMae'][-1], node)
 
 
 def sdgAtr(self, node, sdg):
@@ -24,8 +24,7 @@ def sdgAtr(self, node, sdg):
     if self.inInst['atual'] == 0:
         sdg.edge('ENTRY', node)
     else:
-        print("atr " , self.sdgControl['instMae'])
-        sdg.edge(self.sdgControl['instMae'], node)
+        sdg.edge(self.sdgControl['instMae'][-1], node)
 
 
 def sdgIO(self, tokens, sdg):
@@ -37,35 +36,42 @@ def sdgIO(self, tokens, sdg):
     if self.inInst['atual'] == 0:
         sdg.edge('ENTRY', edge)
     else:
-        sdg.edge(self.sdgControl['instMae'], edge)
+        sdg.edge(self.sdgControl['instMae'][-1], edge)
 
 def sdgIfs(self, node, sdg, counter):
     sdg.node(node, fontcolor='red', color='red', shape='diamond')
+    then = 'then' + str(counter)
     if self.inInst['atual'] == 1:
         sdg.edge('ENTRY', node)
-        then = 'then' + str(counter)
-        sdg.edge(node, then)
-        self.sdgControl['instMae'] = then 
     else:
-        sdg.edge(self.sdgControl['instMae'], node)
-        sdg.edge(node, 'then'+str(counter))
-        self.sdgControl['instMae'] = 'then' +str(counter)
+        sdg.edge(self.sdgControl['instMae'][-1], node)
+    sdg.edge(node, then)
+    self.sdgControl['instMae'].append(then)
         
 
 def sdgElse(self,beginIf, nodeElse, sdg, counter):
     sdg.node(nodeElse+str(counter))
     sdg.edge(beginIf, nodeElse+str(counter))
-    self.sdgControl['instMae'] = nodeElse+str(counter)
-    print("else " , self.sdgControl['instMae'])
+    self.sdgControl['instMae'].append(nodeElse+str(counter))
 
 
-def sdgWhile(self, node ,sdg ):
+def sdgWhile(self, node , sdg):
     sdg.node(node, fontcolor='purple', color='purple')
     sdg.edge(node, node)
     if self.inInst['atual'] == 0:
         sdg.edge('ENTRY', node)
-        self.sdgControl['instMae'] = node 
     else:
-        sdg.edge(self.sdgControl['instMae'], node)
-        self.sdgControl['instMae'] = node
+        sdg.edge(self.sdgControl['instMae'][-1], node)
+    self.sdgControl['instMae'].append(node)
     
+def sdgFor(self, edgefor, sdg):
+    sdg.node(edgefor, fontcolor='purple', color='purple')
+    if self.inInst['atual'] == 1:
+        sdg.edge('ENTRY', edgefor)
+    else:
+        sdg.edge(self.sdgControl['instMae'][-1], edgefor)
+    self.sdgControl['instMae'].append(edgefor)
+
+def sdgForAtr(edgefor, atr, sdg):
+    sdg.node(atr, fontcolor='purple', color='purple')
+    sdg.edge(atr, edgefor)

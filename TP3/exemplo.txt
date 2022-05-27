@@ -1,9 +1,8 @@
-int xw = 4;
-print("ola");
-while(xw < 2){
-    i = 0;
-    x = 3 +3;
-    if(e){
-        print("sim");
-    }else{if(e1){};};
+for(int i = 0; i < 3; i= i+1){
+    while(x<8){
+        k = "coisas";
+            };
+    if(k < 3){if(m==9){};};
+    print("ei");
+    int k = 0;
 };

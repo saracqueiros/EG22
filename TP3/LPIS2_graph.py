@@ -32,7 +32,7 @@ class MyInterpreter (Interpreter):
       self.graphControl = {'aninh': 0 , 'total': 0, 'inFor': False}
       self.html = beginHtml()
       self.nodeAnt = "beginCode"
-      self.sdgControl = {'instMae': 0}
+      self.sdgControl = {'instMae': [], 'inFor' : False}
   
   def dadosfinais(self):
     return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1], self.conds, self.notInic)
@@ -163,6 +163,7 @@ class MyInterpreter (Interpreter):
       if not isinstance(elem, Token):
         self.visit(tree.children[5])    
     self.inInst['atual'] -= 1
+    self.sdgControl['instMae'].pop()
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
     g.edge(self.nodeAnt, nodeWhile)
@@ -199,10 +200,10 @@ class MyInterpreter (Interpreter):
           endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
           self.nodeAnt = beginIf
         edge = self.visit(rule)
-
     self.aninhavel = False 
     endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
     self.inInst['atual'] -=1
+    self.sdgControl['instMae'].pop()
     self.graphControl['aninh'] -= 1
     if self.inInst['atual'] == 0:
       self.graphControl['aninh'] = self.graphControl['total']
@@ -249,19 +250,25 @@ class MyInterpreter (Interpreter):
   def forr(self, tree):
     self.maior()
     #forr: FORW PE variaveis condicao PV atribuicoes PD CE code? CD  
+    
     self.inInst['atual']+= 1
+    self.sdgControl['inFor'] = True
     dec = self.visit(tree.children[2])
+    self.sdgControl['inFor'] = False
     self.nodeAnt = dec
     cndt = self.visit(tree.children[3])
     self.graphControl['inFor'] = True
     edgefor = buildNodeCondFor(self, g, cndt )
+    sdgFor(self, edgefor, sdg)
     atr = self.visit(tree.children[5])
+    sdgForAtr(edgefor, atr, sdg)
     self.graphControl['inFor'] = False 
     g.edge(atr, edgefor)    
     self.nodeAnt = edgefor
     if (len(tree.children) == 10 ):
         self.visit(tree.children[8])
     self.inInst['atual'] -= 1
+    self.sdgControl['instMae'].pop()
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
     g.edge(self.nodeAnt, atr)
