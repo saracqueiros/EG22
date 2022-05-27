@@ -1,9 +1,28 @@
-
-int x = 4 * 4 - 3;
-s = "algo";
-int lista [] = {12, 14};
-dict d = dict();
-dict d;
-string h;
-num = lista[0];
- conj c1 = {"algo", "mais algo"};
+int x;
+if(x > 5){
+    l = 0;
+    }
+    else{
+        if(x > 4){
+            int c;   
+            if(x > 19){
+            int qw;   
+        };
+        };
+    string w ;
+};
+int x1;
+if(x1 > 5){
+    l1 = 0;
+    m = 25;
+    }
+    else{
+        if(x1 > 4){
+            int c1;   
+            if(x1 > 19){
+            int q1w;   
+        };
+        string v;
+    };
+};
+    string w1 ;

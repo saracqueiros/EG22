@@ -27,9 +27,9 @@ class MyInterpreter (Interpreter):
       self.totalInst = 0
       self.inInst = {'atual': 0, 'maior': 0, 'total': 0}
       self.aninhavel  = False 
-      self.forC = 0
+      self.graphControl = {'aninh': 0 , 'total': 0}
       self.html = beginHtml()
-      self.node1 = ""
+      self.nodeAnt = ""
   
   def dadosfinais(self):
     return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1], self.conds, self.notInic)
@@ -37,16 +37,12 @@ class MyInterpreter (Interpreter):
 
   def start(self, tree):
     self.visit(tree.children[0])
-    #return beginHtml() + self.dadosfinais() 
-
   
   def code(self, tree):
-      self.node1 = self.visit((tree.children[0]))    
-      for child in tree.children[1:]:
-        node2 = self.visit(child)
-        g.edge(self.node1, node2)
-        self.node1 = node2
-
+    self.nodeAnt = self.visit(tree.children[0])
+    for child in tree.children[1:]:
+      self.visit(child)
+        
   def variaveis(self, tree):
     return self.visit(tree.children[0])
 
@@ -86,7 +82,7 @@ class MyInterpreter (Interpreter):
       else:
         if tt.type == 'WORD':
           self.varsDecl[tt]["utilizada"] += 1'''
-    return buildNodeDec(dec, tokensList, g)
+    return buildNodeDec(self, dec, tokensList, g)
  
 
   def atribuicoes(self, tree):
@@ -115,7 +111,7 @@ class MyInterpreter (Interpreter):
                 self.varsNDecl[i] = {"pos": (i.line, i.column)}
               else:
                 self.varsDecl[i]["utilizada"] += 1'''
-    return buildNodeAtr(var, g)
+    return buildNodeAtr(self, var, g)
   
 
   def input(self, tree):
@@ -158,14 +154,18 @@ class MyInterpreter (Interpreter):
 
   def cond(self, tree):
     #cond: IFW PE condicao PD CE code? CD else? PV
+    primeiraInstr = self.nodeAnt
     self.totalInst += 1
     self.inInst['atual'] +=1
+    self.graphControl['aninh'] += 1
+    self.graphControl['total'] += 1
     self.tipoInstrucoes['cond'] += 1
-    self.visit(tree.children[2])
+    nodeCond = self.visit(tree.children[2])
+    beginIf = buildNodeCond(self, nodeCond, g)
     if not isinstance(tree.children[5], Token):#Tem codigo
       size = len(tree.children[5].children)
-      sizehere = len(tree.children)
-      sizeeee = len(tree.children[5].children[size-2].children) -2
+      sizehere = len(tree.children[4:])
+      sizeeee = len(tree.children[5].children[size-2].children)-2
       if tree.children[5].children[0].data == 'cond' and isinstance(tree.children[5].children[size-2].children[sizeeee], Token) and isinstance(tree.children[sizehere-2], Token): #o 1 elem do codigo é um if
         self.aninhavel = True 
       else:
@@ -174,11 +174,26 @@ class MyInterpreter (Interpreter):
       self.aninhavel = False
     for rule in tree.children:
       if not isinstance(rule, Token):
-        self.visit(rule)
+        if rule.data == 'elsee':
+          print(self.tipoInstrucoes['cond'])
+          endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
+          self.nodeAnt = beginIf
+        edge = self.visit(rule)
     self.aninhavel = False 
+    print(self.tipoInstrucoes['cond'])
+
+    endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
     self.inInst['atual'] -=1
+    self.graphControl['aninh'] -= 1
+    if self.inInst['atual'] == 0:
+      self.graphControl['aninh'] = self.graphControl['total']
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
+    #se não houver else, ligar o if ao endif diretamente 
+    sizehere = len(tree.children)
+    if isinstance(tree.children[sizehere-2], Token):#Se não tiver um else
+      g.edge(beginIf, endIf)
+    return endIf
   
   def condicao(self, tree):
     #condicao: var ((II|MAIOR|MENOR|DIF|E|OU) var)?
@@ -208,16 +223,15 @@ class MyInterpreter (Interpreter):
               self.notInic[var]={"pos": (var.line, var.column), "qt": 1}
             else:
               self.notInic[var]['qt'] += 1
+    return cndt
 
   def forr(self, tree):
     self.maior()
     #forr: FORW PE variaveis condicao PV atribuicoes PD CE code? CD  
     self.inInst['atual']+= 1
-    self.forC = 1
     self.visit(tree.children[2])
     self.visit(tree.children[3])
     self.visit(tree.children[5])
-    self.forC = 0
     if (len(tree.children) == 10 ):
         self.visit(tree.children[8])
     self.inInst['atual'] -= 1

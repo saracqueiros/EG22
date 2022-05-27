@@ -1,18 +1,58 @@
 digraph grammar {
 	graph [bgcolor=aliceblue rankdir=TB]
-	"int x = 4 * 4 - 3 " [color=blue fontcolor=blue]
-	" s = \"algo\"" [color=green fontcolor=green]
-	"int x = 4 * 4 - 3 " -> " s = \"algo\""
-	"int lista [ ] = { 12 , 14 } " [color=blue fontcolor=blue]
-	" s = \"algo\"" -> "int lista [ ] = { 12 , 14 } "
-	"dict d = dict ( ) " [color=blue fontcolor=blue]
-	"int lista [ ] = { 12 , 14 } " -> "dict d = dict ( ) "
-	"dict d " [color=blue fontcolor=blue]
-	"dict d = dict ( ) " -> "dict d "
-	"string h " [color=blue fontcolor=blue]
-	"dict d " -> "string h "
-	" num = lista[0]" [color=green fontcolor=green]
-	"string h " -> " num = lista[0]"
-	"conj c1 = { \"algo\" , \"mais algo\" } " [color=blue fontcolor=blue]
-	" num = lista[0]" -> "conj c1 = { \"algo\" , \"mais algo\" } "
+	"int x " [color=blue fontcolor=blue]
+	"if (x>5)" [color=red fontcolor=red shape=diamond]
+	"int x " -> "if (x>5)"
+	" l = 0" [color=green fontcolor=green]
+	"if (x>5)" -> " l = 0"
+	endif1 [color=red fontcolor=red shape=diamond]
+	" l = 0" -> endif1
+	"if (x>4)" [color=red fontcolor=red shape=diamond]
+	"if (x>5)" -> "if (x>4)"
+	"int c " [color=blue fontcolor=blue]
+	"if (x>4)" -> "int c "
+	"if (x>19)" [color=red fontcolor=red shape=diamond]
+	"int c " -> "if (x>19)"
+	"int qw " [color=blue fontcolor=blue]
+	"if (x>19)" -> "int qw "
+	endif3 [color=red fontcolor=red shape=diamond]
+	"int qw " -> endif3
+	"if (x>19)" -> endif3
+	endif2 [color=red fontcolor=red shape=diamond]
+	endif3 -> endif2
+	"if (x>4)" -> endif2
+	"string w " [color=blue fontcolor=blue]
+	endif2 -> "string w "
+	endif1 [color=red fontcolor=red shape=diamond]
+	"string w " -> endif1
+	"int x1 " [color=blue fontcolor=blue]
+	endif1 -> "int x1 "
+	"if (x1>5)" [color=red fontcolor=red shape=diamond]
+	"int x1 " -> "if (x1>5)"
+	" l1 = 0" [color=green fontcolor=green]
+	"if (x1>5)" -> " l1 = 0"
+	" m = 25" [color=green fontcolor=green]
+	" l1 = 0" -> " m = 25"
+	endif4 [color=red fontcolor=red shape=diamond]
+	" m = 25" -> endif4
+	"if (x1>4)" [color=red fontcolor=red shape=diamond]
+	"if (x1>5)" -> "if (x1>4)"
+	"int c1 " [color=blue fontcolor=blue]
+	"if (x1>4)" -> "int c1 "
+	"if (x1>19)" [color=red fontcolor=red shape=diamond]
+	"int c1 " -> "if (x1>19)"
+	"int q1w " [color=blue fontcolor=blue]
+	"if (x1>19)" -> "int q1w "
+	endif6 [color=red fontcolor=red shape=diamond]
+	"int q1w " -> endif6
+	"if (x1>19)" -> endif6
+	"string v " [color=blue fontcolor=blue]
+	endif6 -> "string v "
+	endif5 [color=red fontcolor=red shape=diamond]
+	"string v " -> endif5
+	"if (x1>4)" -> endif5
+	endif4 [color=red fontcolor=red shape=diamond]
+	endif5 -> endif4
+	"string w1 " [color=blue fontcolor=blue]
+	endif4 -> "string w1 "
 }

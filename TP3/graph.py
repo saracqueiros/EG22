@@ -9,16 +9,18 @@ from sys import argv
 import copy
 import graphviz
 
-
-def buildNodeDec(dec, tokensList, g):
+def buildNodeDec(self, dec, tokensList, g):
     edge = dec[0] + " " + dec[1] + " "
     for tok in tokensList:
         edge = edge + tok+ " "
     g.node(edge, fontcolor='blue', color='blue')
+    if self.nodeAnt != "":
+        g.edge(self.nodeAnt, edge)
+        self.nodeAnt = edge
     return edge
 
 
-def buildNodeAtr(var, g):
+def buildNodeAtr(self, var, g):
     edge =  " "
     for tok in var:
         if not isinstance(tok, Token):
@@ -27,4 +29,26 @@ def buildNodeAtr(var, g):
         else:
             edge = edge + tok+ " "
     g.node(edge, fontcolor='green', color='green')
+    if self.nodeAnt != "":
+        g.edge(self.nodeAnt, edge)
+        self.nodeAnt = edge
     return edge
+
+def buildNodeCond(self, nodeCond, g):
+    edge = 'if ' + nodeCond
+    g.node(edge, fontcolor='red', color='red', shape='diamond')
+    if self.nodeAnt != "":
+        g.edge(self.nodeAnt, edge)
+        self.nodeAnt = edge
+    
+    return edge
+
+def buildNodeCondEnd(self, g, counter):
+    print("entrei aqui", str(counter))
+    endif = 'endif'+ str(counter)
+    counter += 1
+    g.node(endif, fontcolor='red', color='red', shape='diamond')
+    if self.nodeAnt != "":
+        g.edge(self.nodeAnt, endif)
+        self.nodeAnt = endif
+    return endif
