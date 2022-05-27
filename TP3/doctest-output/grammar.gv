@@ -2,8 +2,12 @@ digraph grammar {
 	graph [bgcolor=aliceblue rankdir=TB]
 	"if (x)" [color=red fontcolor=red shape=diamond]
 	beginCode -> "if (x)"
+	"input()" [color=brown fontcolor=brown]
+	"if (x)" -> "input()"
+	" s = input()" [color=green fontcolor=green]
+	"input()" -> " s = input()"
 	" v = 9" [color=green fontcolor=green]
-	"if (x)" -> " v = 9"
+	" s = input()" -> " v = 9"
 	"int i = 0 " [color=blue fontcolor=blue]
 	" v = 9" -> "int i = 0 "
 	"for (i<20)" [color=purple fontcolor=purple]
@@ -25,10 +29,10 @@ digraph grammar {
 	endif2 [color=red fontcolor=red shape=diamond]
 	" p1 = \"pi\"" -> endif2
 	endif2 -> " i = i+1"
-	" l = 3" [color=green fontcolor=green]
-	"for (i<20)" -> " l = 3"
+	"print(\"oi oi\")" [color=brown fontcolor=brown]
+	"for (i<20)" -> "print(\"oi oi\")"
 	endif1 [color=red fontcolor=red shape=diamond]
-	" l = 3" -> endif1
+	"print(\"oi oi\")" -> endif1
 	"if (x)" -> endif1
 	endif1 -> endCode
 }

@@ -61,3 +61,15 @@ def buildNodeCondFor(self, g, cond):
         g.edge(self.nodeAnt, edgefor)
         self.nodeAnt = edgefor
     return edgefor
+
+
+def buildNodeIO(self, tokens, g):
+    edge = ''
+    for tok in tokens:
+        if tok != ";":
+            edge = edge + tok
+    g.node(edge, fontcolor='brown', color='brown')
+    if self.nodeAnt != "":
+        g.edge(self.nodeAnt, edge)
+        self.nodeAnt = edge
+    return edge

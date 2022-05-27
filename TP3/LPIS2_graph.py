@@ -121,12 +121,15 @@ class MyInterpreter (Interpreter):
     self.maior()
     self.totalInst += 1
     self.tipoInstrucoes['io'] += 1
-    return self.visit_children(tree)
+    r = self.visit_children(tree)
+    buildNodeIO(self, r, g)
+    return r
 
   def output(self, tree):
     #output: OUTPUTW PE ESCAPED_STRING PD PV
     self.maior()
-    self.visit_children(tree)
+    r = self.visit_children(tree)
+    buildNodeIO(self, r, g)
     self.totalInst += 1
     self.tipoInstrucoes['io'] += 1
     return tree
