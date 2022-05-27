@@ -1,7 +1,137 @@
-<class 'lark.lexer.Token'>
-<class 'lark.lexer.Token'>
-<class 'list'>
-<class 'lark.lexer.Token'>
-<class 'lark.lexer.Token'>
-<class 'list'>
-None
+ <!DOCTYPE html>
+<html>
+<style>
+     p {
+        line-height: 2;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+    
+      .customIndent {
+        padding-left: 1em;
+    }
+    
+    .error {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: red;
+    }
+    
+    .redeclared {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: blue;
+    }
+    
+    .notinic {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: orange;
+    }
+    .aninh {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+        color: green;
+    }
+    
+    .code {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .error .errortext,
+    .redeclared .redeclaredtext,
+    .notinic .notinictext, .aninh .aninhtext  {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #fff;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -40px;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+    
+    .error .errortext::after,
+    .redeclared .redeclaredtext::after,
+    .notinic .notinictext::after, .aninh .aninh::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 20%;
+        margin-left: -5px;
+        border-width: 5px;
+        1 border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+    
+    .error:hover .errortext,
+    .redeclared:hover .redeclaredtext,
+    .notinic:hover .notinictext, .aninh:hover .aninhtext {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<body >
+
+  <h2 class="w3-light-grey w3-center w3-border-top w3-border-bottom" style="text-shadow:1px 1px 0 #444">Analisador de código fonte do ficheiro "exemplo.txt"</h2> <div class="w3-round w3-teal">
+            <div class="w3-container">
+            <h2> → Variáveis Declaradas</h2>
+            <div class="w3-responsive">
+            <table class="w3-table-all", style="color:black">
+            <tr>
+                <th>Variável</th>
+                <th>conj</th>
+                <th>dict</th>
+                <th>float</th>
+                <th>int</th>
+                <th>list</th>
+                <th>string</th>
+                <th>tuple</th>
+            </tr> <tr><td><b>i<b></td><td> </td><td> </td><td> </td><td> X </td><td> </td><td> </td><td> </td></tr><tr><td><b>m<b></td><td> </td><td> </td><td> </td><td> X </td><td> </td><td> </td><td> </td></tr>   
+    </table>
+    <h2></h2></div></div></div>
+    <div class="w3-panel w3-pale-blue w3-bottombar w3-border-teal w3-border"> <h2><b> → Warnings sobre variáveis</b></h2><table class="w3-table-all">
+    <tr>
+        <th><b>Variáveis Redeclaradas</b> <span class="w3-badge w3-blue">0</span></th>
+        <th><b>Variáveis Não Declaradas</b> <span class="w3-badge w3-red">2</span></th>
+        <th><b>Variáveis Não Inicializadas</b> <span class="w3-badge w3-yellow">0</span></th>
+        <th><b>Variáveis Nunca Utilizadas</b> <span class="w3-badge w3-purple">1</span></th>
+    </tr><tr><td><ul class="w3-ul w3-center"></ul></td><td><ul class="w3-ul w3-center"><li>x</li><li>l</li></ul></td><td><ul class="w3-ul w3-center"></ul></td><td><ul class="w3-ul w3-center"><li>m</li></ul></td></tr></table></div><div class="w3-panel w3-teal"><h2> → Análise tipo Instruções </h2></div> <table>
+ <tr> <th> Nº Declarações </th><th>2</th></tr> 
+ <tr> <th> Nº Atribuições </th><th>2</th></tr> 
+ <tr> <th> Nº Input/Output </th><th>2</th></tr> 
+ <tr> <th> Nº Ciclos </th><th>2</th></tr> 
+ <tr> <th> Nº Inst. Condicionais </th><th>1</th></tr> 
+ <tr> <th> Nº Funções </th><th>0</th></tr> 
+ <tr> <th> Total Instruções </th><th>9</th></tr></table> 
+<p><p class='code'> NOTA: Existem <b>1</b> situações de aninhamento e o nível máximo de instruções condicionais aninhadas é <b>2.</b></p></p> <div class="w3-panel w3-light-grey w3-topbar w3-bottombar w3-border-teal">
+    <h2 style="color: teal"><b> → Warnings</b></h2><p> (<u>line 5, column 9</u>): Variável <b>x</b> não declarada.</p><p> (<u>line 6, column 1</u>): Variável <b>l</b> não declarada.</p>
+</div><h1 class="w3-center"> <div class ="w3-teal">Control Flow Graphs</div><img src="doctest-output/grammar.gv.png" ></h1></body></html>

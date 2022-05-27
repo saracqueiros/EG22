@@ -221,6 +221,9 @@ def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst,
        r = r + " \n<p><p class='code'> NOTA: Existem <b>"+ str(inInst['total']) + "</b> situações de aninhamento."
     r = r + warnings(varsNDecl, varsRDecl, conds, notInic)
 
+
+    r = r + '<h1 class="w3-center"> <div class ="w3-teal">Control Flow Graphs</div><img src="doctest-output/grammar.gv.png" ></h1>'
+
     return r + str('''</body></html>''')
 
 

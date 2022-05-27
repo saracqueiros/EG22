@@ -14,7 +14,7 @@ from graph import *
 
 
 #Testar:
-#: > result.html | python LPIS2_graph.py >> result.html 
+#: > result.html | python LPIS2_graph.py exemplo.txt >> result.html 
 
 class MyInterpreter (Interpreter):
 
@@ -39,6 +39,7 @@ class MyInterpreter (Interpreter):
   def start(self, tree):
     self.visit(tree.children[0])
     g.edge(self.nodeAnt, "endCode")
+    return self.html + self.dadosfinais()
     
 
   
@@ -56,7 +57,7 @@ class MyInterpreter (Interpreter):
     self.tipoInstrucoes['declaracoes'] += 1
     dec = self.visit(tree.children[0])
     #Verificar que a var ainda não foi declarada ou se o nome da var existe mas são tipos diferentes
-    '''if (dec[1] not in self.varsDecl or (dec[1] in self.varsDecl and self.varsDecl[dec[1]]['tipo']!= dec[0] )):
+    if (dec[1] not in self.varsDecl or (dec[1] in self.varsDecl and self.varsDecl[dec[1]]['tipo']!= dec[0] )):
       if(len(dec) > 3):
         if(dec[2] == "["):
           self.varsDecl[dec[1]] = {"tipo" : dec[0] + "[]", "inic" : 1, "utilizada": 0}
@@ -66,7 +67,7 @@ class MyInterpreter (Interpreter):
         self.varsDecl[dec[1]] = {"tipo" : dec[0], "inic" : 0, "utilizada": 0}
     #Se já foi declarada é anunciada com uma classe própria para tal 
     else: #Guardar as posições em que ocorreu o erro 
-      self.varsRDecl[dec[1]] = {"tipo" : dec[0], "pos": (dec[0].line, dec[0].column)}'''
+      self.varsRDecl[dec[1]] = {"tipo" : dec[0], "pos": (dec[0].line, dec[0].column)}
     tokensList = []
     for elem in dec[2:]:
       if not isinstance(elem, Token):
@@ -79,12 +80,12 @@ class MyInterpreter (Interpreter):
       elif isinstance(elem, Token):
         tokensList.append(elem)
     #decl tuples e ints com operacoes && Casos como: int x = y + 1
-    '''for tt in tokensList:
+    for tt in tokensList:
       if tt.type == 'WORD' and tt not in self.varsDecl:
         self.varsNDecl[tt] = {"pos": (dec[0].line, dec[0].column)}
       else:
         if tt.type == 'WORD':
-          self.varsDecl[tt]["utilizada"] += 1'''
+          self.varsDecl[tt]["utilizada"] += 1
     return buildNodeDec(self, dec, tokensList, g)
  
 
@@ -94,16 +95,14 @@ class MyInterpreter (Interpreter):
     self.maior()
     self.tipoInstrucoes['atribuicoes'] += 1
     var = self.visit_children(tree)
-    '''if (var[0] not in self.varsDecl):
+    if (var[0] not in self.varsDecl):
       if var[0] not in self.varsNDecl:
         self.varsNDecl[var[0]] = {"pos": (var[0].line, var[0].column)}
     else:
       self.varsDecl[var[0]]["utilizada"] += 1 
       self.varsDecl[var[0]]["inic"] = 1 
     for elem in var[1:]:
-        if isinstance(elem, Token):
-            self.html = self.html + elem + " "
-        else: 
+        if not isinstance(elem, Token):
           if elem[0].type == 'input':
             self.visit(elem)
             break
@@ -113,7 +112,7 @@ class MyInterpreter (Interpreter):
               if i not in self.varsDecl:
                 self.varsNDecl[i] = {"pos": (i.line, i.column)}
               else:
-                self.varsDecl[i]["utilizada"] += 1'''
+                self.varsDecl[i]["utilizada"] += 1
     return buildNodeAtr(self, var, g, self.graphControl['inFor'])
   
 
@@ -259,11 +258,9 @@ class MyInterpreter (Interpreter):
     node = buildNodeWhileDo(self, 'DO', g)
     cndt = ''
     for elem in tree.children:
-      if isinstance(elem, Token):
-        self.html = self.html + elem + " "
-      elif elem.data == 'code':
+      if not isinstance(elem, Token) and  elem.data== 'code':
         self.visit(elem)
-      else: #condicao
+      elif not isinstance(elem, Token) and  elem.data== 'condicao': #condicao
         cndt = self.visit(elem)
     whiledo = buildNodeWhileDo(self, 'while' + cndt, g)
     g.edge(whiledo, node)
@@ -281,9 +278,7 @@ class MyInterpreter (Interpreter):
     self.totalInst += 1
     self.tipoInstrucoes['funcoes'] += 1
     for elem in tree.children[:6]:
-      if isinstance(elem, Token):
-        self.html = self.html + elem + " "
-      else:
+      if not isinstance(elem, Token):
         self.visit(elem)
     if not isinstance(tree.children[6], Token):
       if tree.children[6].data == 'code':
@@ -395,7 +390,7 @@ WORD: "a".."z"("a".."z"|"0".."9")*
 '''
 
 f = open(argv[1], "r")
-g = graphviz.Digraph('grammar')
+g = graphviz.Digraph('grammar', format='png')
 
 
 g.graph_attr['rankdir'] = 'TB'
@@ -405,10 +400,13 @@ p = Lark(grammar, propagate_positions = True)
 parse_tree = p.parse(linhas)
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)
+g.render(directory='doctest-output', view=False)  
+
+
+
 print(data)
 
 
-g.render(directory='doctest-output', view=True)  
 
 
 
