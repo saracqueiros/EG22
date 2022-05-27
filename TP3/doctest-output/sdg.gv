@@ -1,33 +1,25 @@
 digraph sdg {
 	graph [rankdir=TB]
 	ENTRY [shape=box]
-	"int x = 4 " [color=blue fontcolor=blue]
-	ENTRY -> "int x = 4 "
-	"if (x>0)" [color=red fontcolor=red shape=diamond]
-	ENTRY -> "if (x>0)"
-	"if (x>0)" -> then1
-	"int m = 2 " [color=blue fontcolor=blue]
-	then1 -> "int m = 2 "
-	" h = 15" [color=green fontcolor=green]
-	then1 -> " h = 15"
-	" k = 0" [color=green fontcolor=green]
-	then1 -> " k = 0"
-	"if (x1>0)" [color=red fontcolor=red shape=diamond]
-	then1 -> "if (x1>0)"
-	"if (x1>0)" -> then2
-	"print(\"coisas\")" [color=brown fontcolor=brown]
-	then2 -> "print(\"coisas\")"
-	else2
-	"if (x1>0)" -> else2
-	" s = input()" [color=green fontcolor=green]
-	else2 -> " s = input()"
-	"if (x<0)" [color=red fontcolor=red shape=diamond]
-	else2 -> "if (x<0)"
-	"if (x<0)" -> then3
-	else1
-	"if (x>0)" -> else1
 	"int xw = 4 " [color=blue fontcolor=blue]
 	ENTRY -> "int xw = 4 "
 	"print(\"ola\")" [color=brown fontcolor=brown]
 	ENTRY -> "print(\"ola\")"
+	"while (xw<2)" [color=purple fontcolor=purple]
+	"while (xw<2)" -> "while (xw<2)"
+	ENTRY -> "while (xw<2)"
+	" i = 0" [color=green fontcolor=green]
+	"while (xw<2)" -> " i = 0"
+	" x = 3+3" [color=green fontcolor=green]
+	"while (xw<2)" -> " x = 3+3"
+	"if (e)" [color=red fontcolor=red shape=diamond]
+	"while (xw<2)" -> "if (e)"
+	"if (e)" -> then1
+	"print(\"sim\")" [color=brown fontcolor=brown]
+	then1 -> "print(\"sim\")"
+	else1
+	"if (e)" -> else1
+	"if (e1)" [color=red fontcolor=red shape=diamond]
+	else1 -> "if (e1)"
+	"if (e1)" -> then2
 }

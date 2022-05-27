@@ -24,6 +24,7 @@ def sdgAtr(self, node, sdg):
     if self.inInst['atual'] == 0:
         sdg.edge('ENTRY', node)
     else:
+        print("atr " , self.sdgControl['instMae'])
         sdg.edge(self.sdgControl['instMae'], node)
 
 
@@ -51,9 +52,20 @@ def sdgIfs(self, node, sdg, counter):
         self.sdgControl['instMae'] = 'then' +str(counter)
         
 
-
-
 def sdgElse(self,beginIf, nodeElse, sdg, counter):
     sdg.node(nodeElse+str(counter))
     sdg.edge(beginIf, nodeElse+str(counter))
     self.sdgControl['instMae'] = nodeElse+str(counter)
+    print("else " , self.sdgControl['instMae'])
+
+
+def sdgWhile(self, node ,sdg ):
+    sdg.node(node, fontcolor='purple', color='purple')
+    sdg.edge(node, node)
+    if self.inInst['atual'] == 0:
+        sdg.edge('ENTRY', node)
+        self.sdgControl['instMae'] = node 
+    else:
+        sdg.edge(self.sdgControl['instMae'], node)
+        self.sdgControl['instMae'] = node
+    

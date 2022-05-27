@@ -1,14 +1,9 @@
-int x = 4;
-if(x>0){
-    int m = 2;
-    h = 15;
-    k = 0;
-    if(x1>0){
-        print("coisas");
-    }else{};
-}else{
-    s = input();
-    if(x<0){};
-};
 int xw = 4;
 print("ola");
+while(xw < 2){
+    i = 0;
+    x = 3 +3;
+    if(e){
+        print("sim");
+    }else{if(e1){};};
+};

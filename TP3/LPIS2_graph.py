@@ -155,6 +155,7 @@ class MyInterpreter (Interpreter):
     #WHILEW PE condicao PD CE code? CD 
     cndt = self.visit(tree.children[2])
     nodeWhile = buildNodeWhile(self, cndt, g)
+    sdgWhile(self, nodeWhile, sdg)
     self.inInst['atual'] += 1
     #Significa que tem código no meio 
     self.aninhavel = False
@@ -166,7 +167,7 @@ class MyInterpreter (Interpreter):
       self.inInst['total'] += 1
     g.edge(self.nodeAnt, nodeWhile)
     self.nodeAnt = nodeWhile
-
+    return tree
 
   def cond(self, tree):
     #cond: IFW PE condicao PD CE code? CD else? PV
@@ -193,12 +194,12 @@ class MyInterpreter (Interpreter):
       self.aninhavel = False
     for rule in tree.children:
       if not isinstance(rule, Token):
-        edge = self.visit(rule)
         if rule.data == 'elsee':
           sdgElse(self,beginIf, 'else', sdg, vv)
           endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
           self.nodeAnt = beginIf
-        
+        edge = self.visit(rule)
+
     self.aninhavel = False 
     endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
     self.inInst['atual'] -=1
