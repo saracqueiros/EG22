@@ -202,7 +202,7 @@ def warnings(varsNDecl, varsRDecl, conds, notInic):
     return r +  '''
 </div>'''
 
-def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst, nomeFich, conds, notInic):
+def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst, nomeFich, conds, notInic, mccabe):
     r = '<h2 class="w3-light-grey w3-center w3-border-top w3-border-bottom" style="text-shadow:1px 1px 0 #444">Analisador de código fonte do ficheiro "'+ nomeFich+ '"</h2>'
     r = r + varsDecl(varsDec)
 
@@ -223,6 +223,8 @@ def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst,
 
 
     r = r + '<h1 class="w3-center"> <div class ="w3-teal">Control Flow Graph</div><img src="doctest-output/grammar.gv.png" ></h1>'
+    comp = mccabe['edges'] - mccabe['nodes'] + 2
+    r = r + '<h5><b>Complexidade de McCabe´s é ' + str(comp)+ '</b>, considerando ' +  str(mccabe['nodes']) +' vértices e ' + str(mccabe['edges'])+ 'arestas.</h5>'
     r = r + '<h1 class="w3-center"> <div class ="w3-teal">System Dependency Graph</div><img src="doctest-output/sdg.gv.png" ></h1>'
 
     return r + str('''</body></html>''')

@@ -34,15 +34,17 @@ class MyInterpreter (Interpreter):
       self.nodeAnt = "beginCode"
       self.sdgControl = {'instMae': [], 'inFor' : False}
       self.dicVarNode = dict()
+      self.mccabe = {'nodes': 0 , 'edges': 0 }
   
   def dadosfinais(self):
-    return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1], self.conds, self.notInic)
+    return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1], self.conds, self.notInic, self.mccabe)
 
 
   def start(self, tree):
-    sdg.node("ENTRY", shape= 'box')
+    sdg.node("ENTRY", shape='box')
     self.visit(tree.children[0])
     g.edge(self.nodeAnt, "endCode")
+    sdgDD(self.dicVarNode, sdg)
     return self.html + self.dadosfinais()
     
   
@@ -83,14 +85,19 @@ class MyInterpreter (Interpreter):
       elif isinstance(elem, Token):
         tokensList.append(elem)
     #decl tuples e ints com operacoes && Casos como: int x = y + 1
+    node = buildNodeDec(self, dec, tokensList, g)
+    if dec[1] not in self.dicVarNode:
+      self.dicVarNode[dec[1]] = dict()
+    self.dicVarNode[dec[1]][node] = []
     for tt in tokensList:
       if tt.type == 'WORD' and tt not in self.varsDecl:
         self.varsNDecl[tt] = {"pos": (dec[0].line, dec[0].column)}
-      else:
-        if tt.type == 'WORD':
-          self.varsDecl[tt]["utilizada"] += 1
-    node = buildNodeDec(self, dec, tokensList, g)
+        self.dicVarNode[dec[1]][node].append(tt)
+      elif tt.type == 'WORD':
+        self.varsDecl[tt]["utilizada"] += 1
+        self.dicVarNode[dec[1]][node].append(tt)
     sdgDec(self, node, sdg)
+    
     return node
  
 
@@ -106,6 +113,10 @@ class MyInterpreter (Interpreter):
     else:
       self.varsDecl[var[0]]["utilizada"] += 1 
       self.varsDecl[var[0]]["inic"] = 1 
+    node = buildNodeAtr(self, var, g, self.graphControl['inFor'])
+    if var[0] not in self.dicVarNode:
+      self.dicVarNode[var[0]] = dict()
+    self.dicVarNode[var[0]][node] = []
     for elem in var[1:]:
         if not isinstance(elem, Token):
           if elem[0].type == 'input':
@@ -114,11 +125,13 @@ class MyInterpreter (Interpreter):
           for i in elem:
             #Utilização de variaveis nao declaradas à direita da operação =
             if i.type == 'WORD':
+              self.dicVarNode[var[0]][node].append(i)
               if i not in self.varsDecl:
                 self.varsNDecl[i] = {"pos": (i.line, i.column)}
               else:
                 self.varsDecl[i]["utilizada"] += 1
-    node = buildNodeAtr(self, var, g, self.graphControl['inFor'])
+    
+
     sdgAtr(self, node, sdg)
     return node
   
@@ -168,12 +181,15 @@ class MyInterpreter (Interpreter):
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
     g.edge(self.nodeAnt, nodeWhile)
+    self.mccabe['edges'] +=1  
+    print("incrementei",self.mccabe['edges']) 
+
+
     self.nodeAnt = nodeWhile
     return tree
 
   def cond(self, tree):
     #cond: IFW PE condicao PD CE code? CD else? PV
-    primeiraInstr = self.nodeAnt
     self.totalInst += 1
     self.inInst['atual'] +=1
     self.graphControl['aninh'] += 1
@@ -183,10 +199,9 @@ class MyInterpreter (Interpreter):
     beginIf = buildNodeCond(self, nodeCond, g)
     vv = self.tipoInstrucoes['cond']
     sdgIfs(self, beginIf, sdg,vv)
-    temElse = False
     if not isinstance(tree.children[5], Token):#Tem codigo
       size = len(tree.children[5].children)
-      sizehere = len(tree.children[4:])
+      sizehere = len(tree.children)
       sizeeee = len(tree.children[5].children[size-2].children)-2
       if tree.children[5].children[0].data == 'cond' and isinstance(tree.children[5].children[size-2].children[sizeeee], Token) and isinstance(tree.children[sizehere-2], Token): #o 1 elem do codigo é um if
         self.aninhavel = True 
@@ -214,7 +229,8 @@ class MyInterpreter (Interpreter):
     sizehere = len(tree.children)
     if isinstance(tree.children[sizehere-2], Token):#Se não tiver um else
       g.edge(beginIf, endIf)
-    temElse = False
+      self.mccabe['edges'] +=1
+      print("incrementei",self.mccabe['edges']) 
 
     return endIf
   
@@ -264,7 +280,10 @@ class MyInterpreter (Interpreter):
     atr = self.visit(tree.children[5])
     sdgForAtr(edgefor, atr, sdg)
     self.graphControl['inFor'] = False 
-    g.edge(atr, edgefor)    
+    g.edge(atr, edgefor)  
+    self.mccabe['edges'] +=1
+    print("incrementei",self.mccabe['edges'])  
+  
     self.nodeAnt = edgefor
     if (len(tree.children) == 10 ):
         self.visit(tree.children[8])
@@ -273,6 +292,9 @@ class MyInterpreter (Interpreter):
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
     g.edge(self.nodeAnt, atr)
+    self.mccabe['edges'] +=1  
+    print("incrementei",self.mccabe['edges']) 
+
     self.nodeAnt = edgefor
     return dec 
   
@@ -290,6 +312,9 @@ class MyInterpreter (Interpreter):
             
     whiledo = buildNodeWhileDo(self, 'while' + cndt, g)
     g.edge(whiledo, node)
+    self.mccabe['edges'] +=1  
+    print("incrementei",self.mccabe['edges']) 
+
     self.sdgControl['instMae'].pop()
     self.nodeAnt = node
     self.inInst['atual'] -=1
@@ -436,7 +461,8 @@ parse_tree = p.parse(linhas)
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)
 g.render(directory='doctest-output', view=False)  
-sdg.render(directory='doctest-output', view=False)  
+sdg.render(directory='doctest-output', view=True)  
+
 print(data)
 
 

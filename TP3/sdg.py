@@ -76,7 +76,6 @@ def sdgFor(self, edgefor, sdg):
 def sdgForAtr(edgefor, atr, sdg):
     sdg.node(atr, fontcolor='purple', color='purple')
     sdg.edge(atr, edgefor)
-    #sdg.edge(atr, atr, style='dashed')
 
 
 def sdgWhileDo(self, edge, sdg):
@@ -87,3 +86,39 @@ def sdgWhileDo(self, edge, sdg):
     else:
         sdg.edge(self.sdgControl['instMae'][-1], edge)
     self.sdgControl['instMae'].append(edge)
+
+'''
+def sdgUpdateNodes(dicVarNode, dec, tt, sdg):
+     for nodes in dicVarNode[dec]:
+        if nodes['node'] == node:
+            dicVarNode[dec]['node']['use'].push()
+
+
+def sdgAddVar(dicVarNode, dec, node, sdg):
+    if dec not in dicVarNode:
+        dicVarNode[dec] = list()
+    for nodes in dicVarNode[dec]:
+        #if nodes['node'] == node:
+            #dicVarNode[dec]['node']['use'].push()
+        if nodes['node'] != node:
+            dicVarNode[dec].push({'node': node, 'use': list()})
+
+'''
+
+
+
+def sdgDD(dicVarNode, sdg):
+    for var in dicVarNode:
+        print(var.line)
+        for node in dicVarNode[var]:
+            listAt = dicVarNode[var][node]
+            for u in listAt:
+                if u in dicVarNode:
+                    print(u.line)
+                    node1=  dicVarNode[u]
+                    for n in node1:
+                        if u.line >= var.line :
+                            sdg.edge(n, node, style='dashed')
+                       
+
+  
