@@ -76,6 +76,7 @@ def sdgFor(self, edgefor, sdg):
 def sdgForAtr(edgefor, atr, sdg):
     sdg.node(atr, fontcolor='purple', color='purple')
     sdg.edge(atr, edgefor)
+    #sdg.edge(atr, atr, style='dashed')
 
 
 def sdgWhileDo(self, edge, sdg):

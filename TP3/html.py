@@ -222,7 +222,8 @@ def finalData( varsDec, varsNDecl, varsRDecl, tipoInstrucoes, inInst, totalInst,
     r = r + warnings(varsNDecl, varsRDecl, conds, notInic)
 
 
-    r = r + '<h1 class="w3-center"> <div class ="w3-teal">Control Flow Graphs</div><img src="doctest-output/grammar.gv.png" ></h1>'
+    r = r + '<h1 class="w3-center"> <div class ="w3-teal">Control Flow Graph</div><img src="doctest-output/grammar.gv.png" ></h1>'
+    r = r + '<h1 class="w3-center"> <div class ="w3-teal">System Dependency Graph</div><img src="doctest-output/sdg.gv.png" ></h1>'
 
     return r + str('''</body></html>''')
 

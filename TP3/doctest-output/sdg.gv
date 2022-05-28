@@ -9,6 +9,7 @@ digraph sdg {
 	"for (i<3)" -> " i = i+1"
 	" i = i+1" [color=purple fontcolor=purple]
 	" i = i+1" -> "for (i<3)"
+	" i = i+1" -> " i = i+1" [style=dashed]
 	"while (x<8)" [color=purple fontcolor=purple]
 	"while (x<8)" -> "while (x<8)"
 	"for (i<3)" -> "while (x<8)"

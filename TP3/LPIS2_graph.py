@@ -33,6 +33,7 @@ class MyInterpreter (Interpreter):
       self.html = beginHtml()
       self.nodeAnt = "beginCode"
       self.sdgControl = {'instMae': [], 'inFor' : False}
+      self.dicVarNode = dict()
   
   def dadosfinais(self):
     return finalData(self.varsDecl, self.varsNDecl, self.varsRDecl, self.tipoInstrucoes, self.inInst, self.totalInst, argv[1], self.conds, self.notInic)
@@ -435,7 +436,7 @@ parse_tree = p.parse(linhas)
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)
 g.render(directory='doctest-output', view=False)  
-sdg.render(directory='doctest-output', view=True)  
+sdg.render(directory='doctest-output', view=False)  
 print(data)
 
 
