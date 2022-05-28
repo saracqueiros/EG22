@@ -20,6 +20,11 @@ digraph sdg {
 	"if (m==9)" [color=red fontcolor=red shape=diamond]
 	then1 -> "if (m==9)"
 	"if (m==9)" -> then2
+	"DO while(x<2)" [color=purple fontcolor=purple]
+	"DO while(x<2)" -> "DO while(x<2)"
+	then2 -> "DO while(x<2)"
+	"int m = 0 " [color=blue fontcolor=blue]
+	"DO while(x<2)" -> "int m = 0 "
 	"print(\"ei\")" [color=brown fontcolor=brown]
 	"for (i<3)" -> "print(\"ei\")"
 	"int k = 0 " [color=blue fontcolor=blue]

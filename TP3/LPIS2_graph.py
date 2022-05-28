@@ -42,7 +42,7 @@ class MyInterpreter (Interpreter):
     sdg.node("ENTRY", shape= 'box')
     self.visit(tree.children[0])
     g.edge(self.nodeAnt, "endCode")
-    #return self.html + self.dadosfinais()
+    return self.html + self.dadosfinais()
     
   
   def code(self, tree):
@@ -278,16 +278,21 @@ class MyInterpreter (Interpreter):
   def dowhile (self, tree):
     self.maior()
     #dowhile: DOW CE code? CD WHILEW PE condicao PD PV
+    self.inInst['atual'] +=1
+
     node = buildNodeWhileDo(self, 'DO', g)
-    cndt = ''
+    cndt  = self.visit(tree.children[len(tree.children)-2]) ##condição 
+    sdgWhileDo(self, node + ' while'+ cndt, sdg )
     for elem in tree.children:
       if not isinstance(elem, Token) and  elem.data== 'code':
-        self.visit(elem)
-      elif not isinstance(elem, Token) and  elem.data== 'condicao': #condicao
-        cndt = self.visit(elem)
+        self.visit(elem) 
+            
     whiledo = buildNodeWhileDo(self, 'while' + cndt, g)
     g.edge(whiledo, node)
+    self.sdgControl['instMae'].pop()
     self.nodeAnt = node
+    self.inInst['atual'] -=1
+
 
   def elsee(self,tree):
     #elsee: ELSEW CE code CD
@@ -429,13 +434,9 @@ p = Lark(grammar, propagate_positions = True)
 parse_tree = p.parse(linhas)
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)
-#g.render(directory='doctest-output', view=False)  
+g.render(directory='doctest-output', view=False)  
 sdg.render(directory='doctest-output', view=True)  
-
-
-
-
-#print(data)
+print(data)
 
 
 

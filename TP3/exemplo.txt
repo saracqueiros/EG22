@@ -2,7 +2,14 @@ for(int i = 0; i < 3; i= i+1){
     while(x<8){
         k = "coisas";
             };
-    if(k < 3){if(m==9){};};
+    if(k < 3){if(m==9){
+
+        do{
+    int m = 0;
+} while(x < 2);
+
+
+    };};
     print("ei");
     int k = 0;
 };

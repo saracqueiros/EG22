@@ -19,6 +19,7 @@ def sdgDec(self, node, sdg):
         sdg.edge(self.sdgControl['instMae'][-1], node)
 
 
+
 def sdgAtr(self, node, sdg):
     sdg.node(node, fontcolor='green', color='green')
     if self.inInst['atual'] == 0:
@@ -75,3 +76,13 @@ def sdgFor(self, edgefor, sdg):
 def sdgForAtr(edgefor, atr, sdg):
     sdg.node(atr, fontcolor='purple', color='purple')
     sdg.edge(atr, edgefor)
+
+
+def sdgWhileDo(self, edge, sdg):
+    sdg.node(edge, fontcolor='purple', color='purple')
+    sdg.edge(edge, edge)
+    if self.inInst['atual'] == 1:
+        sdg.edge('ENTRY', edge)
+    else:
+        sdg.edge(self.sdgControl['instMae'][-1], edge)
+    self.sdgControl['instMae'].append(edge)
