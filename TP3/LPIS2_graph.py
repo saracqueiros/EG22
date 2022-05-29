@@ -216,14 +216,17 @@ class MyInterpreter (Interpreter):
         if rule.data == 'elsee':
           sdgElse(self,beginIf, 'else', sdg, vv)
           endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
+          print(endIf)
           self.nodeAnt = beginIf
         edge = self.visit(rule)
     self.aninhavel = False 
     endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
+    print(endIf)
     self.inInst['atual'] -=1
     self.sdgControl['instMae'].pop()
     self.graphControl['aninh'] -= 1
-    if self.inInst['atual'] == 0:
+
+    if self.inInst['atual'] == 1:
       self.graphControl['aninh'] = self.graphControl['total']
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
@@ -443,7 +446,7 @@ WORD: "a".."z"("a".."z"|"0".."9")*
 '''
 
 f = open(argv[1], "r")
-g = graphviz.Digraph('grammar', format='dot')
+g = graphviz.Digraph('grammar', format='png')
 g.graph_attr['rankdir'] = 'TB'
 g.graph_attr['bgcolor'] ="aliceblue"
 

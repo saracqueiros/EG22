@@ -8,5 +8,73 @@ digraph grammar {
 	"int m = x * 3 " -> " h = m+1"
 	" x = h+2" [color=green fontcolor=green]
 	" h = m+1" -> " x = h+2"
-	" x = h+2" -> endCode
+	"string st " [color=blue fontcolor=blue]
+	" x = h+2" -> "string st "
+	"int i = 0 " [color=blue fontcolor=blue]
+	"string st " -> "int i = 0 "
+	"for (i<16)" [color=purple fontcolor=purple]
+	"int i = 0 " -> "for (i<16)"
+	" i = i+1" [color=green fontcolor=green]
+	" i = i+1" -> "for (i<16)"
+	"if (s)" [color=red fontcolor=red shape=diamond]
+	"for (i<16)" -> "if (s)"
+	"print(\"ola\")" [color=brown fontcolor=brown]
+	"if (s)" -> "print(\"ola\")"
+	"int t [ ] " [color=blue fontcolor=blue]
+	"print(\"ola\")" -> "int t [ ] "
+	endif1 [color=red fontcolor=red shape=diamond]
+	"int t [ ] " -> endif1
+	endif1 [color=red fontcolor=red shape=diamond]
+	"if (s)" -> endif1
+	endif1 -> " i = i+1"
+	"int xw = 4 " [color=blue fontcolor=blue]
+	"for (i<16)" -> "int xw = 4 "
+	"while (xw<12)" [color=purple fontcolor=purple]
+	"int xw = 4 " -> "while (xw<12)"
+	" i = 0" [color=green fontcolor=green]
+	"while (xw<12)" -> " i = 0"
+	" x = 3+3" [color=green fontcolor=green]
+	" i = 0" -> " x = 3+3"
+	"if (e)" [color=red fontcolor=red shape=diamond]
+	" x = 3+3" -> "if (e)"
+	"print(\"sim\")" [color=brown fontcolor=brown]
+	"if (e)" -> "print(\"sim\")"
+	"tuple t1 = ( 1 , 2 ) " [color=blue fontcolor=blue]
+	"print(\"sim\")" -> "tuple t1 = ( 1 , 2 ) "
+	endif2 [color=red fontcolor=red shape=diamond]
+	"tuple t1 = ( 1 , 2 ) " -> endif2
+	"if (e1)" [color=red fontcolor=red shape=diamond]
+	"if (e)" -> "if (e1)"
+	"conj c1 = { \"algo\" , \"mais algo\" } " [color=blue fontcolor=blue]
+	"if (e1)" -> "conj c1 = { \"algo\" , \"mais algo\" } "
+	endif3 [color=red fontcolor=red shape=diamond]
+	"conj c1 = { \"algo\" , \"mais algo\" } " -> endif3
+	"if (e1)" -> endif3
+	endif2 [color=red fontcolor=red shape=diamond]
+	endif3 -> endif2
+	endif2 -> "while (xw<12)"
+	"string st " [color=blue fontcolor=blue]
+	"while (xw<12)" -> "string st "
+	"if (m)" [color=red fontcolor=red shape=diamond]
+	"string st " -> "if (m)"
+	"if (xw==4)" [color=red fontcolor=red shape=diamond]
+	"if (m)" -> "if (xw==4)"
+	"if (s&&m)" [color=red fontcolor=red shape=diamond]
+	"if (xw==4)" -> "if (s&&m)"
+	"dict d = dict ( ) " [color=blue fontcolor=blue]
+	"if (s&&m)" -> "dict d = dict ( ) "
+	"float f = 1.0 " [color=blue fontcolor=blue]
+	"dict d = dict ( ) " -> "float f = 1.0 "
+	" f = f+2.7" [color=green fontcolor=green]
+	"float f = 1.0 " -> " f = f+2.7"
+	endif6 [color=red fontcolor=red shape=diamond]
+	" f = f+2.7" -> endif6
+	"if (s&&m)" -> endif6
+	endif5 [color=red fontcolor=red shape=diamond]
+	endif6 -> endif5
+	"if (xw==4)" -> endif5
+	endif6 [color=red fontcolor=red shape=diamond]
+	endif5 -> endif6
+	"if (m)" -> endif6
+	endif6 -> endCode
 }

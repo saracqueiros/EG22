@@ -9,4 +9,63 @@ digraph sdg {
 	ENTRY -> " h = m+1"
 	" x = h+2" [color=green fontcolor=green]
 	ENTRY -> " x = h+2"
+	"string st " [color=blue fontcolor=blue]
+	ENTRY -> "string st "
+	"int i = 0 " [color=blue fontcolor=blue]
+	ENTRY -> "int i = 0 "
+	"for (i<16)" [color=purple fontcolor=purple]
+	ENTRY -> "for (i<16)"
+	" i = i+1" [color=green fontcolor=green]
+	"for (i<16)" -> " i = i+1"
+	" i = i+1" [color=purple fontcolor=purple]
+	" i = i+1" -> "for (i<16)"
+	"if (s)" [color=red fontcolor=red shape=diamond]
+	"for (i<16)" -> "if (s)"
+	"if (s)" -> then1
+	"print(\"ola\")" [color=brown fontcolor=brown]
+	then1 -> "print(\"ola\")"
+	"int t [ ] " [color=blue fontcolor=blue]
+	then1 -> "int t [ ] "
+	else1
+	"if (s)" -> else1
+	"int xw = 4 " [color=blue fontcolor=blue]
+	ENTRY -> "int xw = 4 "
+	"while (xw<12)" [color=purple fontcolor=purple]
+	"while (xw<12)" -> "while (xw<12)"
+	ENTRY -> "while (xw<12)"
+	" i = 0" [color=green fontcolor=green]
+	"while (xw<12)" -> " i = 0"
+	" x = 3+3" [color=green fontcolor=green]
+	"while (xw<12)" -> " x = 3+3"
+	"if (e)" [color=red fontcolor=red shape=diamond]
+	"while (xw<12)" -> "if (e)"
+	"if (e)" -> then2
+	"print(\"sim\")" [color=brown fontcolor=brown]
+	then2 -> "print(\"sim\")"
+	"tuple t1 = ( 1 , 2 ) " [color=blue fontcolor=blue]
+	then2 -> "tuple t1 = ( 1 , 2 ) "
+	else2
+	"if (e)" -> else2
+	"if (e1)" [color=red fontcolor=red shape=diamond]
+	else2 -> "if (e1)"
+	"if (e1)" -> then3
+	"conj c1 = { \"algo\" , \"mais algo\" } " [color=blue fontcolor=blue]
+	then3 -> "conj c1 = { \"algo\" , \"mais algo\" } "
+	"string st " [color=blue fontcolor=blue]
+	ENTRY -> "string st "
+	"if (m)" [color=red fontcolor=red shape=diamond]
+	ENTRY -> "if (m)"
+	"if (m)" -> then4
+	"if (xw==4)" [color=red fontcolor=red shape=diamond]
+	then4 -> "if (xw==4)"
+	"if (xw==4)" -> then5
+	"if (s&&m)" [color=red fontcolor=red shape=diamond]
+	then5 -> "if (s&&m)"
+	"if (s&&m)" -> then6
+	"dict d = dict ( ) " [color=blue fontcolor=blue]
+	then6 -> "dict d = dict ( ) "
+	"float f = 1.0 " [color=blue fontcolor=blue]
+	then6 -> "float f = 1.0 "
+	" f = f+2.7" [color=green fontcolor=green]
+	then6 -> " f = f+2.7"
 }

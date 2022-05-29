@@ -1,5 +1,5 @@
 digraph grammar {
-	graph [bb="0,0,120.89,396",
+	graph [bb="0,0,97.491,180",
 		bgcolor=aliceblue,
 		rankdir=TB
 	];
@@ -7,32 +7,14 @@ digraph grammar {
 	"int x = 0 "	[color=blue,
 		fontcolor=blue,
 		height=0.5,
-		pos="60.445,306",
+		pos="48.746,90",
 		width=1.2277];
-	"int m = x * 3 "	[color=blue,
-		fontcolor=blue,
-		height=0.5,
-		pos="60.445,234",
-		width=1.679];
-	"int x = 0 " -> "int m = x * 3 "	[pos="e,60.445,252.1 60.445,287.7 60.445,279.98 60.445,270.71 60.445,262.11"];
-	beginCode	[height=0.5,
-		pos="60.445,378",
-		width=1.354];
-	beginCode -> "int x = 0 "	[pos="e,60.445,324.1 60.445,359.7 60.445,351.98 60.445,342.71 60.445,334.11"];
-	" h = m+1"	[color=green,
-		fontcolor=green,
-		height=0.5,
-		pos="60.445,162",
-		width=1.2457];
-	"int m = x * 3 " -> " h = m+1"	[pos="e,60.445,180.1 60.445,215.7 60.445,207.98 60.445,198.71 60.445,190.11"];
-	" x = h+2"	[color=green,
-		fontcolor=green,
-		height=0.5,
-		pos="60.445,90",
-		width=1.1735];
-	" h = m+1" -> " x = h+2"	[pos="e,60.445,108.1 60.445,143.7 60.445,135.98 60.445,126.71 60.445,118.11"];
 	endCode	[height=0.5,
-		pos="60.445,18",
+		pos="48.746,18",
 		width=1.1735];
-	" x = h+2" -> endCode	[pos="e,60.445,36.104 60.445,71.697 60.445,63.983 60.445,54.712 60.445,46.112"];
+	"int x = 0 " -> endCode	[pos="e,48.746,36.104 48.746,71.697 48.746,63.983 48.746,54.712 48.746,46.112"];
+	beginCode	[height=0.5,
+		pos="48.746,162",
+		width=1.354];
+	beginCode -> "int x = 0 "	[pos="e,48.746,108.1 48.746,143.7 48.746,135.98 48.746,126.71 48.746,118.11"];
 }
