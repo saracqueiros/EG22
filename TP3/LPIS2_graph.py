@@ -44,7 +44,7 @@ class MyInterpreter (Interpreter):
     sdg.node("ENTRY", shape='box')
     self.visit(tree.children[0])
     g.edge(self.nodeAnt, "endCode")
-    sdgDD(self.dicVarNode, sdg)
+    #sdgDD(self.dicVarNode, sdg)
     return self.html + self.dadosfinais()
     
   
@@ -86,16 +86,19 @@ class MyInterpreter (Interpreter):
         tokensList.append(elem)
     #decl tuples e ints com operacoes && Casos como: int x = y + 1
     node = buildNodeDec(self, dec, tokensList, g)
-    if dec[1] not in self.dicVarNode:
-      self.dicVarNode[dec[1]] = dict()
-    self.dicVarNode[dec[1]][node] = []
+    #if dec[1] not in self.dicVarNode:
+      #self.dicVarNode[dec[1]] = {'nodes': [], 'lines': []}
+      #self.dicVarNode[dec[1]]['nodes'].append(node)
+      #self.dicVarNode[dec[1]]['lines'].append(dec[1].line)
     for tt in tokensList:
       if tt.type == 'WORD' and tt not in self.varsDecl:
         self.varsNDecl[tt] = {"pos": (dec[0].line, dec[0].column)}
-        self.dicVarNode[dec[1]][node].append(tt)
+        #self.dicVarNode[dec[1]]['nodes'].append(node)
+        #self.dicVarNode[dec[1]]['lines'].append(dec[1].line)
       elif tt.type == 'WORD':
         self.varsDecl[tt]["utilizada"] += 1
-        self.dicVarNode[dec[1]][node].append(tt)
+        #self.dicVarNode[dec[1]]['nodes'].append(node)
+        #self.dicVarNode[dec[1]]['lines'].append(dec[1].line)
     sdgDec(self, node, sdg)
     
     return node
@@ -114,9 +117,9 @@ class MyInterpreter (Interpreter):
       self.varsDecl[var[0]]["utilizada"] += 1 
       self.varsDecl[var[0]]["inic"] = 1 
     node = buildNodeAtr(self, var, g, self.graphControl['inFor'])
-    if var[0] not in self.dicVarNode:
-      self.dicVarNode[var[0]] = dict()
-    self.dicVarNode[var[0]][node] = []
+    #if var[0] not in self.dicVarNode:
+    #  self.dicVarNode[var[0]] = dict()
+    #self.dicVarNode[var[0]][node] = []
     for elem in var[1:]:
         if not isinstance(elem, Token):
           if elem[0].type == 'input':
@@ -125,7 +128,7 @@ class MyInterpreter (Interpreter):
           for i in elem:
             #Utilização de variaveis nao declaradas à direita da operação =
             if i.type == 'WORD':
-              self.dicVarNode[var[0]][node].append(i)
+              #self.dicVarNode[var[0]][node].append(i)
               if i not in self.varsDecl:
                 self.varsNDecl[i] = {"pos": (i.line, i.column)}
               else:
@@ -182,7 +185,6 @@ class MyInterpreter (Interpreter):
       self.inInst['total'] += 1
     g.edge(self.nodeAnt, nodeWhile)
     self.mccabe['edges'] +=1  
-    print("incrementei",self.mccabe['edges']) 
 
 
     self.nodeAnt = nodeWhile
@@ -230,7 +232,7 @@ class MyInterpreter (Interpreter):
     if isinstance(tree.children[sizehere-2], Token):#Se não tiver um else
       g.edge(beginIf, endIf)
       self.mccabe['edges'] +=1
-      print("incrementei",self.mccabe['edges']) 
+
 
     return endIf
   
@@ -282,7 +284,6 @@ class MyInterpreter (Interpreter):
     self.graphControl['inFor'] = False 
     g.edge(atr, edgefor)  
     self.mccabe['edges'] +=1
-    print("incrementei",self.mccabe['edges'])  
   
     self.nodeAnt = edgefor
     if (len(tree.children) == 10 ):
@@ -293,7 +294,6 @@ class MyInterpreter (Interpreter):
       self.inInst['total'] += 1
     g.edge(self.nodeAnt, atr)
     self.mccabe['edges'] +=1  
-    print("incrementei",self.mccabe['edges']) 
 
     self.nodeAnt = edgefor
     return dec 
@@ -313,7 +313,6 @@ class MyInterpreter (Interpreter):
     whiledo = buildNodeWhileDo(self, 'while' + cndt, g)
     g.edge(whiledo, node)
     self.mccabe['edges'] +=1  
-    print("incrementei",self.mccabe['edges']) 
 
     self.sdgControl['instMae'].pop()
     self.nodeAnt = node
@@ -444,7 +443,7 @@ WORD: "a".."z"("a".."z"|"0".."9")*
 '''
 
 f = open(argv[1], "r")
-g = graphviz.Digraph('grammar', format='png')
+g = graphviz.Digraph('grammar', format='dot')
 g.graph_attr['rankdir'] = 'TB'
 g.graph_attr['bgcolor'] ="aliceblue"
 
@@ -461,8 +460,7 @@ parse_tree = p.parse(linhas)
 #print(parse_tree.pretty())
 data = MyInterpreter().visit(parse_tree)
 g.render(directory='doctest-output', view=False)  
-sdg.render(directory='doctest-output', view=True)  
-
+sdg.render(directory='doctest-output', view=False)  
 print(data)
 
 

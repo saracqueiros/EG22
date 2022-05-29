@@ -9,8 +9,4 @@ digraph sdg {
 	ENTRY -> " h = m+1"
 	" x = h+2" [color=green fontcolor=green]
 	ENTRY -> " x = h+2"
-	" h = m+1" -> " x = h+2" [style=dashed]
-	"int x = 0 " -> "int m = x * 3 " [style=dashed]
-	" x = h+2" -> "int m = x * 3 " [style=dashed]
-	"int m = x * 3 " -> " h = m+1" [style=dashed]
 }

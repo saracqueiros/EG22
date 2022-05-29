@@ -19,7 +19,6 @@ def buildNodeDec(self, dec, tokensList, g):
         g.edge(self.nodeAnt, edge)
         if self.nodeAnt != 'beginCode':
             self.mccabe['edges'] +=1  
-        print("incrementei", self.nodeAnt, edge) 
         self.nodeAnt = edge
     return edge
 
@@ -49,7 +48,6 @@ def buildNodeCond(self, nodeCond, g):
         g.edge(self.nodeAnt, edge)
         if self.nodeAnt != 'beginCode':
             self.mccabe['edges'] +=1 
-        print("incrementei",self.mccabe['edges']) 
         self.nodeAnt = edge
     
     return edge
@@ -63,7 +61,6 @@ def buildNodeCondEnd(self, g, counter):
         g.edge(self.nodeAnt, endif)
         if self.nodeAnt != 'beginCode':
             self.mccabe['edges'] +=1
-        print("incrementei",self.mccabe['edges'])     
         self.nodeAnt = endif
     return endif
 
@@ -76,7 +73,6 @@ def buildNodeCondFor(self, g, cond):
         g.edge(self.nodeAnt, edgefor)
         if self.nodeAnt != 'beginCode':
             self.mccabe['edges'] +=1
-        print("incrementei",self.mccabe['edges']) 
         self.nodeAnt = edgefor
     return edgefor
 
@@ -92,7 +88,6 @@ def buildNodeIO(self, tokens, g):
         g.edge(self.nodeAnt, edge)
         if self.nodeAnt != 'beginCode':
             self.mccabe['edges'] +=1  
-        print("incrementei",self.mccabe['edges']) 
         self.nodeAnt = edge
     return edge
 
@@ -106,7 +101,6 @@ def buildNodeWhile(self, cond, g):
         g.edge(self.nodeAnt, edgewhile)
         if self.nodeAnt != 'beginCode':
             self.mccabe['edges'] +=1
-        print("incrementei",self.mccabe['edges']) 
         self.nodeAnt = edgewhile
     return edgewhile
 
@@ -116,6 +110,5 @@ def buildNodeWhileDo(self, text, g):
     self.mccabe['nodes'] +=1  
     g.edge(self.nodeAnt, text)
     self.mccabe['edges'] +=1  
-    print("incrementei",self.mccabe['edges']) 
     self.nodeAnt = text
     return text
