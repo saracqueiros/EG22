@@ -9,8 +9,6 @@ digraph sdg {
 	ENTRY -> " h = m+1"
 	" x = h+2" [color=green fontcolor=green]
 	ENTRY -> " x = h+2"
-	"string st " [color=blue fontcolor=blue]
-	ENTRY -> "string st "
 	"int i = 0 " [color=blue fontcolor=blue]
 	ENTRY -> "int i = 0 "
 	"for (i<16)" [color=purple fontcolor=purple]
@@ -28,6 +26,8 @@ digraph sdg {
 	then1 -> "int t [ ] "
 	else1
 	"if (s)" -> else1
+	"string st " [color=blue fontcolor=blue]
+	ENTRY -> "string st "
 	"int xw = 4 " [color=blue fontcolor=blue]
 	ENTRY -> "int xw = 4 "
 	"while (xw<12)" [color=purple fontcolor=purple]
