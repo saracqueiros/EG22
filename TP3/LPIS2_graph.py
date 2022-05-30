@@ -47,7 +47,6 @@ class MyInterpreter (Interpreter):
     #sdgDD(self.dicVarNode, sdg)
     return self.html + self.dadosfinais()
     
-  
   def code(self, tree):
     for child in tree.children[0:]:
       self.visit(child)
@@ -216,17 +215,15 @@ class MyInterpreter (Interpreter):
         if rule.data == 'elsee':
           sdgElse(self,beginIf, 'else', sdg, vv)
           endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
-          print(endIf)
           self.nodeAnt = beginIf
         edge = self.visit(rule)
     self.aninhavel = False 
     endIf = buildNodeCondEnd(self, g, self.graphControl['aninh'])
-    print(endIf)
     self.inInst['atual'] -=1
     self.sdgControl['instMae'].pop()
     self.graphControl['aninh'] -= 1
 
-    if self.inInst['atual'] == 1:
+    if self.graphControl['aninh'] == 1:
       self.graphControl['aninh'] = self.graphControl['total']
     if self.inInst['atual'] == 1:
       self.inInst['total'] += 1
@@ -272,7 +269,6 @@ class MyInterpreter (Interpreter):
   def forr(self, tree):
     self.maior()
     #forr: FORW PE variaveis condicao PV atribuicoes PD CE code? CD  
-    
     self.inInst['atual']+= 1
     self.sdgControl['inFor'] = True
     dec = self.visit(tree.children[2])
@@ -305,18 +301,15 @@ class MyInterpreter (Interpreter):
     self.maior()
     #dowhile: DOW CE code? CD WHILEW PE condicao PD PV
     self.inInst['atual'] +=1
-
     node = buildNodeWhileDo(self, 'DO', g)
     cndt  = self.visit(tree.children[len(tree.children)-2]) ##condição 
     sdgWhileDo(self, node + ' while'+ cndt, sdg )
     for elem in tree.children:
       if not isinstance(elem, Token) and  elem.data== 'code':
         self.visit(elem) 
-            
     whiledo = buildNodeWhileDo(self, 'while' + cndt, g)
     g.edge(whiledo, node)
     self.mccabe['edges'] +=1  
-
     self.sdgControl['instMae'].pop()
     self.nodeAnt = node
     self.inInst['atual'] -=1
@@ -454,8 +447,6 @@ g.graph_attr['bgcolor'] ="aliceblue"
 sdg = graphviz.Digraph('sdg', format='png')
 sdg.graph_attr['rankdir'] = 'TB'
 #sdg.graph_attr['bgcolor'] ="mistyrose1"
-
-
 
 linhas = f.read()
 p = Lark(grammar, propagate_positions = True) 

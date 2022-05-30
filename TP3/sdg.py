@@ -18,8 +18,6 @@ def sdgDec(self, node, sdg):
     else:
         sdg.edge(self.sdgControl['instMae'][-1], node)
 
-
-
 def sdgAtr(self, node, sdg):
     sdg.node(node, fontcolor='green', color='green')
     if self.inInst['atual'] == 0:
